@@ -43,25 +43,5 @@ class AuthController extends Controller
         return response()->json($result['data'], 201);
     }
 
-    public function test(Request $request)  {
-        $credentials = $request->only('email', 'password');
-        Validator::make($credentials, [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Los datos suministrados son incorrectos'], 401);
-        }
-
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        $token->save();
-
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'data' => $user,
-        ]);
-    }
+   
 }
