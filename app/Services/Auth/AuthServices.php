@@ -44,4 +44,8 @@ class AuthServices
             ];
         }
     }
+
+    public function register(){
+        
+    }
 }
