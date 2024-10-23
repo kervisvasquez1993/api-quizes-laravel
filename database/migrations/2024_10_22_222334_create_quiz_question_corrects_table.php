@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('quiz_question_corrects', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('quiz_id')->constrained('quizzes')->onDelete('cascade');  // Relación con `quizzes`
+            $table->foreignId('question_id')->constrained('questions')->onDelete('cascade');  // Relación con `questions`
+            $table->text('message_correct')->nullable();
+            $table->text('message_incorrect')->nullable();
             $table->timestamps();
         });
     }
