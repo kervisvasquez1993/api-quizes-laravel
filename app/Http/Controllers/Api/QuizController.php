@@ -11,15 +11,22 @@ use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
-    protected QuizServices $QuizServices;
-    public function __construct(QuizServices $QuizServices)
+    protected QuizServices $quizServices;
+    public function __construct(QuizServices $quizServices)
     {
-        $this->QuizServices = $QuizServices;
+        $this->quizServices = $quizServices;
     }
     public function store(StoreQuizRequest $request)
     {
         $userId = Auth::user()->id;
-        $quizDTO = QuizDTO::fromRequest($request, $userId);
-        return response()->json($quizDTO->toArray(), 201);
+        $url_img = $this->quizServices->saveFile($request->file('img'));
+        $result = $this->quizServices->createQuiz(QuizDTO::fromRequest($request, $userId, $url_img));
+        if (!$result['success']) {
+            return response()->json([
+                'error' => $result['message']
+            ], 422);
+        }
+        return response()->json($result['data'], 201);
+
     }
 }

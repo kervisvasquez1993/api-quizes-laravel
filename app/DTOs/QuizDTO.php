@@ -1,5 +1,7 @@
 <?php
+
 namespace App\DTOs;
+
 use App\Http\Requests\Quiz\StoreQuizRequest;
 
 class QuizDTO
@@ -11,13 +13,13 @@ class QuizDTO
         private readonly ?string $img = null
     ) {}
 
-    public static function fromRequest(StoreQuizRequest $request, int $userId): self
+    public static function fromRequest(StoreQuizRequest $request, int $userId, ?string $img = null): self
     {
         return new self(
             questionTitle: $request->validated('question_title'),
             questionAnswer: (bool) $request->validated('question_answer'),
-            userId: $userId, 
-            img: $request->validated('img') ?? null
+            userId: $userId,
+            img: $img 
         );
     }
 

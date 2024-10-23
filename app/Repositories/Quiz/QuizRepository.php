@@ -1,9 +1,20 @@
 <?php
+
 namespace App\Repositories\Quiz;
+
 use App\DTOs\QuizDTO;
 use App\Interface\Quiz\QuizRepositoryInterface;
-class QuizRepository  implements QuizRepositoryInterface{
-    public function createQuiz(QuizDTO $quizDTO){
+use App\Models\Quiz;
 
+class QuizRepository  implements QuizRepositoryInterface
+{
+    public function createQuiz(QuizDTO $quizDTO)
+    {
+        return Quiz::create([
+            "question_title" => $quizDTO->getQuestionTitle(),
+            "question_answer" => $quizDTO->getQuestionAnswer(),
+            "user_id" => $quizDTO->getUserId(),
+            "img" => $quizDTO->getImg()
+        ]);
     }
 }
