@@ -3,9 +3,11 @@
 namespace App\Repositories\Auth;
 
 use App\DTOs\LoginDTO;
+use App\DTOs\RegisterDTO;
 use App\Interface\Auth\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthRepository  implements AuthRepositoryInterface
 {
@@ -31,8 +33,13 @@ class AuthRepository  implements AuthRepositoryInterface
             'access_token' => $tokenResult->accessToken
         ];
     }
-    public function register(array $data)
+    public function createUser(RegisterDTO $registerDTO): User
     {
-        return User::create($data);
+        return User::create([
+            'username' => $registerDTO->getUsername(),
+            'email' => $registerDTO->getEmail(),
+            'password' => Hash::make($registerDTO->getPassword()),
+            'role' => $registerDTO->getRole()
+        ]);
     }
 }

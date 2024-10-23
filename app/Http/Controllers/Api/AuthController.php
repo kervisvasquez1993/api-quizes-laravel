@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\DTOs\LoginDTO;
+use App\DTOs\RegisterDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -30,7 +31,13 @@ class AuthController extends Controller
     }
     public function register(RegisterRequest $request)
     {
+        $result = $this->authServices->register(RegisterDTO::fromRequest($request));
 
-        // $result = $this->authServices
+        if (!$result['success']) {
+            return response()->json([
+                'error' => $result['message']
+            ], 422);
+        }
+        return response()->json($result['data'], 201);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\DTOs\LoginDTO;
+use App\DTOs\RegisterDTO;
 use App\Interface\Auth\AuthRepositoryInterface;
 use Exception;
 
@@ -19,7 +20,7 @@ class AuthServices
     {
         try {
             $authResult = $this->authRepository->login($loginDTO);
-            
+
             if (!$authResult['success']) {
                 return [
                     'success' => false,
@@ -45,7 +46,23 @@ class AuthServices
         }
     }
 
-    public function register(){
-        
+    public function register(RegisterDTO $registerDTO)
+    {
+        try {
+            $user = $this->authRepository->createUser($registerDTO);
+
+
+            return [
+                'success' => true,
+                'data' => [
+                    'user' => $user
+                ]
+            ];
+        } catch (Exception $ex) {
+            return [
+                'success' => false,
+                'message' => $ex->getMessage()
+            ];
+        }
     }
 }
