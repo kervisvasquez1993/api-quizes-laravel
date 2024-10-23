@@ -9,7 +9,7 @@ class Quiz extends Model
     protected $fillable = [
         'question_title',
         'img',
-        'created_by',
+        'user_id',
         'question_answer'
     ];
 
