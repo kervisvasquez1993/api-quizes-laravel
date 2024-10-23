@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('question_title');
             $table->string('img')->nullable();
             $table->boolean('question_answer');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
