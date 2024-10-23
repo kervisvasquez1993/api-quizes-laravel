@@ -7,17 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz extends Model
 {
     protected $fillable = [
-        'title',
-        'description',
-        'created_by'
+        'question_title',
+        'img',
+        'created_by',
+        'question_answer'
     ];
-    public function questions()
-    {
-        return $this->hasMany(Question::class);
-    }
 
-    public function correctAnswers()
-    {
-        return $this->hasMany(QuizQuestionCorrect::class);
-    }
 }

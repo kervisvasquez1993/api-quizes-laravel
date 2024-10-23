@@ -13,8 +13,8 @@ class UserResponse extends Model
     protected $fillable = [
         'user_id',
         'quiz_id',
-        'question_id',
-        'is_correct'
+        'selected_response',
+        'point'
     ];
 
     public function user()
@@ -28,8 +28,5 @@ class UserResponse extends Model
     }
 
 
-    public function question()
-    {
-        return $this->belongsTo(Question::class);
-    }
+
 }
