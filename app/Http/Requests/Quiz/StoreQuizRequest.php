@@ -5,6 +5,7 @@ namespace App\Http\Requests\Quiz;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class StoreQuizRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreQuizRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Cambiar a true para permitir la autorización.
+        return Auth::check() && Auth::user()->role === 'admin';
     }
 
     /**
@@ -24,7 +25,7 @@ class StoreQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'question_title' => 'required|string|max:255',
+            'question_title' => 'required|string|max:255|unique:quizzes',
             'question_answer' => 'required|boolean',
             'img' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ];
@@ -37,5 +38,12 @@ class StoreQuizRequest extends FormRequest
                 'data' => $validator->errors()
             ]
         ));
+    }
+    protected function failedAuthorization()
+    {
+
+        throw new HttpResponseException(response()->json([
+            'message' => 'You are not authorized to perform this action.',
+        ], 403));
     }
 }

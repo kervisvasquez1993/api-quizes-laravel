@@ -26,7 +26,6 @@ class QuizController extends Controller
                 'error' => $result['message']
             ], 422);
         }
-        return response()->json($result['data'], 201);
-
+        return response()->json($result['data'], status: 201);
     }
 }
