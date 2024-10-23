@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\DTOs\LoginDTO;
 use App\Interface\Auth\AuthRepositoryInterface;
+use Exception;
 
 class AuthServices
 {
@@ -17,13 +18,30 @@ class AuthServices
     public function login(LoginDTO $loginDTO)
     {
         try {
-            $data = $this->authRepository->login($loginDTO);
+            $authResult = $this->authRepository->login($loginDTO);
+            
+            if (!$authResult['success']) {
+                return [
+                    'success' => false,
+                    'message' => 'Los datos suministrados son incorrectos'
+                ];
+            }
+
+            $user = $authResult['user'];
+            $tokenResult = $this->authRepository->createAccessToken($user);
+
             return [
-                "success" => true,
-                "data" => $data
+                'success' => true,
+                'data' => [
+                    'access_token' => $tokenResult['access_token'],
+                    'data' => $user
+                ]
             ];
-        } catch (\Exception $ex) {
-            return ['success' => false, 'message' => $ex->getMessage(), "e" => $ex];
+        } catch (Exception $ex) {
+            return [
+                'success' => false,
+                'message' => $ex->getMessage()
+            ];
         }
     }
 }

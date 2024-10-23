@@ -19,7 +19,14 @@ class AuthController extends Controller
     }
     public function login(LoginRequest $request)
     {
-        return $this->authServices->login(LoginDTO::fromRequest($request));
+        $result = $this->authServices->login(LoginDTO::fromRequest($request));
+        if (!$result['success']) {
+            return response()->json([
+                'error' => $result['message']
+            ], 401);
+        }
+
+        return response()->json($result['data']);
     }
     public function register(RegisterRequest $request) {}
 }

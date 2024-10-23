@@ -12,10 +12,24 @@ class AuthRepository  implements AuthRepositoryInterface
     public function login(LoginDTO $loginDTO)
     {
         if (!Auth::attempt($loginDTO->credentials())) {
-            throw new \Exception('Invalid credentials');
+            return [
+                'success' => false
+            ];
         }
+        return [
+            'success' => true,
+            'user' => Auth::user()
+        ];
+    }
+    public function createAccessToken(User $user): array
+    {
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+        $token->save();
 
-        return Auth::user();
+        return [
+            'access_token' => $tokenResult->accessToken
+        ];
     }
     public function register(array $data)
     {
