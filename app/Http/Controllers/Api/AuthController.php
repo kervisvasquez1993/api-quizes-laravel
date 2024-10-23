@@ -9,6 +9,8 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Auth\AuthServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -39,5 +41,27 @@ class AuthController extends Controller
             ], 422);
         }
         return response()->json($result['data'], 201);
+    }
+
+    public function test(Request $request)  {
+        $credentials = $request->only('email', 'password');
+        Validator::make($credentials, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['error' => 'Los datos suministrados son incorrectos'], 401);
+        }
+
+        $user = $request->user();
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+        $token->save();
+
+        return response()->json([
+            'access_token' => $tokenResult->accessToken,
+            'data' => $user,
+        ]);
     }
 }

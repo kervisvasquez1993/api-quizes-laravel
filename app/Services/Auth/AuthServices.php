@@ -29,6 +29,7 @@ class AuthServices
             }
 
             $user = $authResult['user'];
+            error_log($user);
             $tokenResult = $this->authRepository->createAccessToken($user);
 
             return [
@@ -50,8 +51,6 @@ class AuthServices
     {
         try {
             $user = $this->authRepository->createUser($registerDTO);
-
-
             return [
                 'success' => true,
                 'data' => [
