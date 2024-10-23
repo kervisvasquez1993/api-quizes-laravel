@@ -8,6 +8,11 @@ use App\Models\Quiz;
 
 class QuizRepository  implements QuizRepositoryInterface
 {
+
+    public function getAllQuiz() {}
+    public function getQuizById($id) {}
+
+    public function updateQuiz($id, QuizDTO $quizDTO) {}
     public function createQuiz(QuizDTO $quizDTO)
     {
         return Quiz::create([
@@ -17,4 +22,5 @@ class QuizRepository  implements QuizRepositoryInterface
             "img" => $quizDTO->getImg()
         ]);
     }
+    public function deleteQuiz($id) {}
 }
