@@ -25,9 +25,8 @@ class StoreQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'question_title' => 'required|string|max:255|unique:quizzes',
-            'question_answer' => 'required|boolean',
-            'img' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'title' => 'required|string|max:255|unique:quizzes',
+            'description' => 'string|max:255'
         ];
     }
     public function failedValidation(Validator $validator)

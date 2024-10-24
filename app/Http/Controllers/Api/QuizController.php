@@ -19,8 +19,8 @@ class QuizController extends Controller
     public function store(StoreQuizRequest $request)
     {
         $userId = Auth::user()->id;
-        $url_img = $this->quizServices->saveFile($request->file('img'));
-        $result = $this->quizServices->createQuiz(QuizDTO::fromRequest($request, $userId, $url_img));
+        error_log($userId);
+        $result = $this->quizServices->createQuiz(QuizDTO::fromRequest($request, $userId));
         if (!$result['success']) {
             return response()->json([
                 'error' => $result['message']

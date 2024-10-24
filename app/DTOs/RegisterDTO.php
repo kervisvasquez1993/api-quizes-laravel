@@ -10,7 +10,7 @@ class RegisterDTO
         private readonly string $username,
         private readonly string $email,
         private readonly string $password,
-        private readonly string $role = 'client'
+        private readonly string $role = 'user'
     ) {}
 
     public static function fromRequest(RegisterRequest $request): self
@@ -19,7 +19,7 @@ class RegisterDTO
             username: $request->validated('username'),
             email: $request->validated('email'),
             password: $request->validated('password'),
-            role: 'client'
+            role: 'user'
         );
     }
 

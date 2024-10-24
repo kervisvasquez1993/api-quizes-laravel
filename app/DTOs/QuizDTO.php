@@ -7,49 +7,41 @@ use App\Http\Requests\Quiz\StoreQuizRequest;
 class QuizDTO
 {
     public function __construct(
-        private readonly string $questionTitle,
-        private readonly string $questionAnswer,
+        private readonly string $title,
+        private readonly string $description,
         private readonly int $userId,
-        private readonly ?string $img = null
     ) {}
 
-    public static function fromRequest(StoreQuizRequest $request, int $userId, ?string $img = null): self
+    public static function fromRequest(StoreQuizRequest $request, int $userId): self
     {
         return new self(
-            questionTitle: $request->validated('question_title'),
-            questionAnswer: (bool) $request->validated('question_answer'),
-            userId: $userId,
-            img: $img 
+            title: $request->validated('title'),
+            description: $request->validated('description'),
+            userId: $userId
         );
     }
 
     public function toArray(): array
     {
         return [
-            'question_title' => $this->questionTitle,
-            'question_answer' => $this->questionAnswer,
-            'user_id' => $this->userId,
-            'img' => $this->img
+            'title' => $this->title,
+            'description' => $this->description,
+            'user_id' => $this->userId
         ];
     }
 
-    public function getQuestionTitle(): string
+    public function getTitle(): string
     {
-        return $this->questionTitle;
+        return $this->title;
     }
 
-    public function getQuestionAnswer(): bool
+    public function getDescription(): string
     {
-        return $this->questionAnswer;
+        return $this->title;
     }
 
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function getImg(): ?string
-    {
-        return $this->img;
     }
 }
