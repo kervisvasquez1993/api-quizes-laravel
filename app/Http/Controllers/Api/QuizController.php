@@ -63,6 +63,8 @@ class QuizController extends Controller
         if (isset($data['success']) && !$data['success']) {
             return response()->json($data, 404);
         }
-        return response()->json($data['message'], 404);
+        return response()->json([
+            'message' => $data["message"],
+        ], 404);
     }
 }
