@@ -3,6 +3,7 @@
 namespace App\DTOs;
 
 use App\Http\Requests\Quiz\StoreQuizRequest;
+use App\Http\Requests\Quiz\UpdateQuizRequest;
 use Illuminate\Support\Facades\Auth;
 
 class QuizDTO
@@ -14,6 +15,14 @@ class QuizDTO
     ) {}
 
     public static function fromRequest(StoreQuizRequest $request): self
+    {
+        return new self(
+            title: $request->validated('title'),
+            description: $request->validated('description'),
+            userId: Auth::user()->id
+        );
+    }
+    public static function fromUpdateRequest(UpdateQuizRequest $request): self
     {
         return new self(
             title: $request->validated('title'),

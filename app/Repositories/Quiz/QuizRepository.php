@@ -12,7 +12,14 @@ class QuizRepository  implements QuizRepositoryInterface
     public function getAllQuiz() {}
     public function getQuizById($id) {}
 
-    public function updateQuiz($id, QuizDTO $quizDTO) {}
+    public function updateQuiz(Quiz $quiz, QuizDTO $quizDTO)
+    {
+        $quiz->update([
+            "title" => $quizDTO->getTitle(),
+            "description" => $quizDTO->getDescription()
+        ]);
+        return $quiz;
+    }
     public function createQuiz(QuizDTO $quizDTO)
     {
         return Quiz::create([

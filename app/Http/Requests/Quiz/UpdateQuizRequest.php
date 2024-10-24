@@ -25,9 +25,8 @@ class UpdateQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'question_title' => 'sometimes|string|max:255|unique:quizzes,question_title,' . $this->route('quiz'),
-            'question_answer' => 'sometimes|boolean',
-            'img' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'title' => 'sometimes|string|max:255|unique:quizzes,title,' . $this->route('id'),
+            'description' => 'sometimes|string|max:255|unique:quizzes,description,' . $this->route('id')
         ];
     }
     public function failedValidation(Validator $validator)

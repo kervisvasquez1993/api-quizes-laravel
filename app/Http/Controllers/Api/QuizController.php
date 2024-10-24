@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\DTOs\QuizDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Quiz\StoreQuizRequest;
+use App\Http\Requests\Quiz\UpdateQuizRequest;
 use App\Services\Quiz\QuizServices;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
@@ -25,5 +25,16 @@ class QuizController extends Controller
             ], 422);
         }
         return response()->json($result['data'], status: 201);
+    }
+
+    public function update(UpdateQuizRequest $request, string $id)
+    {
+        $result = $this->quizServices->updateQuiz(QuizDTO::fromUpdateRequest($request), $id);
+        if (!$result['success']) {
+            return response()->json([
+                'error' => $result['message']
+            ], 422);
+        }
+        return response()->json($result['data'], status: 200);
     }
 }
