@@ -6,6 +6,7 @@ use App\DTOs\QuizDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Quiz\StoreQuizRequest;
 use App\Http\Requests\Quiz\UpdateQuizRequest;
+use App\Http\Resources\QuizResource;
 use App\Services\Quiz\QuizServices;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,23 @@ class QuizController extends Controller
     public function __construct(QuizServices $quizServices)
     {
         $this->quizServices = $quizServices;
+    }
+
+    public function index()
+    {
+        $data = $this->quizServices->getAllQuizzes();
+        return QuizResource::collection($data);
+    }
+
+    public function show($id)
+    {
+        $data = $this->quizServices->getQuizById($id);
+
+        if (isset($data['success']) && !$data['success']) {
+            return response()->json($data, 404);
+        }
+
+        return new QuizResource($data);
     }
     public function store(StoreQuizRequest $request)
     {

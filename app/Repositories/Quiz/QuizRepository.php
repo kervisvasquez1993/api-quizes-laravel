@@ -9,8 +9,12 @@ use App\Models\Quiz;
 class QuizRepository  implements QuizRepositoryInterface
 {
 
-    public function getAllQuiz() {}
-    public function getQuizById($id) {}
+    public function getAllQuiz() {
+        return Quiz::all();
+    }
+    public function getQuizById($id) {
+        return Quiz::findOrFail($id);
+    }
 
     public function updateQuiz(Quiz $quiz, QuizDTO $quizDTO)
     {

@@ -28,6 +28,22 @@ class QuizServices
         }
         return $student;
     }
+    public function getAllQuizzes()
+    {
+        return $this->quizRepository->getAllQuiz();
+    }
+
+    public function getQuizById($id)
+    {
+        try {
+            return $this->quizRepository->getQuizById($id);
+        } catch (\Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
+        }
+    }
 
     public function createQuiz(QuizDTO $quiz)
     {
