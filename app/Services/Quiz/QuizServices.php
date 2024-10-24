@@ -45,6 +45,20 @@ class QuizServices
         }
     }
 
+    public function deletedQuiz($id)
+    {
+        try {
+            $this->findStudentOrFail($id);
+            $this->quizRepository->deletedQuiz($id);
+            return ['success' => true, 'message' => 'Record deleted successfully'];
+        } catch (\Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
+        }
+    }
+
     public function createQuiz(QuizDTO $quiz)
     {
 
@@ -77,6 +91,7 @@ class QuizServices
             ];
         }
     }
+
 
     public function saveFile(?UploadedFile $file): ?string
     {

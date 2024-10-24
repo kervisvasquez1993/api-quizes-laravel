@@ -19,4 +19,5 @@ Route::get('/quiz/{id}', [QuizController::class, 'show'])->name('showQuiz');
 Route::middleware('auth:api')->group(function () {
     Route::post('/quiz', [QuizController::class, 'store'])->name('createQuiz');
     Route::put('/quiz/{id}', [QuizController::class, 'update'])->name('updateQuiz');
+    Route::delete('/quiz/{id}', [QuizController::class, 'destroy'])->name('updateQuiz');
 });

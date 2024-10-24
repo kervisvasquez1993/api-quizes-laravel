@@ -9,10 +9,12 @@ use App\Models\Quiz;
 class QuizRepository  implements QuizRepositoryInterface
 {
 
-    public function getAllQuiz() {
+    public function getAllQuiz()
+    {
         return Quiz::all();
     }
-    public function getQuizById($id) {
+    public function getQuizById($id)
+    {
         return Quiz::findOrFail($id);
     }
 
@@ -32,5 +34,8 @@ class QuizRepository  implements QuizRepositoryInterface
             "user_id" => $quizDTO->getUserId()
         ]);
     }
-    public function deleteQuiz($id) {}
+    public function deletedQuiz($id)
+    {
+        return Quiz::destroy($id);
+    }
 }

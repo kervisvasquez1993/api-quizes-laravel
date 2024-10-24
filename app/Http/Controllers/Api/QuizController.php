@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\DTOs\QuizDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Quiz\DeleteQuizRequest;
 use App\Http\Requests\Quiz\StoreQuizRequest;
 use App\Http\Requests\Quiz\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
@@ -54,5 +55,14 @@ class QuizController extends Controller
             ], 422);
         }
         return response()->json($result['data'], status: 200);
+    }
+
+    public function destroy(DeleteQuizRequest $id)
+    {
+        $data = $this->quizServices->deletedQuiz($id);
+        if (isset($data['success']) && !$data['success']) {
+            return response()->json($data, 404);
+        }
+        return response()->json($data['message'], 404);
     }
 }
