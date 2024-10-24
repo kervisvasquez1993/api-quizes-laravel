@@ -3,6 +3,7 @@
 namespace App\DTOs;
 
 use App\Http\Requests\Quiz\StoreQuizRequest;
+use Illuminate\Support\Facades\Auth;
 
 class QuizDTO
 {
@@ -12,12 +13,12 @@ class QuizDTO
         private readonly int $userId,
     ) {}
 
-    public static function fromRequest(StoreQuizRequest $request, int $userId): self
+    public static function fromRequest(StoreQuizRequest $request): self
     {
         return new self(
             title: $request->validated('title'),
             description: $request->validated('description'),
-            userId: $userId
+            userId: Auth::user()->id
         );
     }
 
@@ -37,7 +38,7 @@ class QuizDTO
 
     public function getDescription(): string
     {
-        return $this->title;
+        return $this->description;
     }
 
     public function getUserId(): int

@@ -6,6 +6,7 @@ use App\DTOs\QuizDTO;
 use App\Interface\Quiz\QuizRepositoryInterface;
 use Exception;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class QuizServices
@@ -19,7 +20,7 @@ class QuizServices
 
     public function createQuiz(QuizDTO $quiz)
     {
-
+      
         try {
             $quiz = $this->quizRepository->createQuiz($quiz);
             return [

@@ -16,8 +16,8 @@ class QuizRepository  implements QuizRepositoryInterface
     public function createQuiz(QuizDTO $quizDTO)
     {
         return Quiz::create([
-            "question_title" => $quizDTO->getTitle(),
-            "question_answer" => $quizDTO->getDescription(),
+            "title" => $quizDTO->getTitle(),
+            "description" => $quizDTO->getDescription(),
             "user_id" => $quizDTO->getUserId()
         ]);
     }
