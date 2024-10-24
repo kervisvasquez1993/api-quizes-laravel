@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quiz_id')->references('id')->on('quizzes')->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('tile');
+            $table->string('question');
             $table->string('image')->nullable();
             $table->boolean('correct_answer');
             $table->timestamps();

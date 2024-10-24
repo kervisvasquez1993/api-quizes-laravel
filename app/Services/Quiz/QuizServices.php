@@ -6,9 +6,7 @@ use App\DTOs\QuizDTO;
 use App\Interface\Quiz\QuizRepositoryInterface;
 use App\Models\Quiz;
 use Exception;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+
 
 class QuizServices
 {
@@ -19,7 +17,7 @@ class QuizServices
         $this->quizRepository = $quizRepository;
     }
 
-    public function findStudentOrFail($id)
+    public function findQuizOrFail($id)
     {
         $student = Quiz::find($id);
         if (!$student) {
@@ -48,7 +46,7 @@ class QuizServices
     public function deletedQuiz($id)
     {
         try {
-            $this->findStudentOrFail($id);
+            $this->findQuizOrFail($id);
             $this->quizRepository->deletedQuiz($id);
             return ['success' => true, 'message' => 'Record deleted successfully'];
         } catch (\Exception $exception) {
@@ -81,7 +79,7 @@ class QuizServices
     public function updateQuiz(QuizDTO $quizDTO, $id)
     {
         try {
-            $quiz = $this->findStudentOrFail($id);
+            $quiz = $this->findQuizOrFail($id);
             $updatedQuiz = $this->quizRepository->updateQuiz($quiz, $quizDTO);
             return ['success' => true, "data" => $updatedQuiz, 'message' => 'Record updated successfully'];
         } catch (\Exception $exception) {
@@ -93,12 +91,5 @@ class QuizServices
     }
 
 
-    public function saveFile(?UploadedFile $file): ?string
-    {
-        if ($file) {
-            $path = $file->store('quizzes', 'public');
-            return Storage::url($path);
-        }
-        return null;
-    }
+   
 }
