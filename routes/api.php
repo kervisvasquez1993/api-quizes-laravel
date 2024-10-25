@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PlayerAnswerController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuizController;
 use Illuminate\Http\Request;
@@ -27,4 +28,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/quiz/{quizId}/questions', [QuestionController::class, 'store'])->name('createQuestionForQuiz');
     Route::put('/questions/{id}', [QuestionController::class, 'update'])->name('updateQuestion');
     Route::post('/questions/{id}/image', [QuestionController::class, 'updateImage'])->name('updateImageQuestion');
+    // player answer
+    Route::post('/questions/{questionsId}/player-answer', [PlayerAnswerController::class, 'store'])->name('playerAnswerQuestion');
+
 });
