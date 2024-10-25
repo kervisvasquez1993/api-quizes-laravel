@@ -31,6 +31,19 @@ class QuizServices
         return $this->quizRepository->getAllQuiz();
     }
 
+    public function questionForQuiz($quizId)
+    {
+        try {
+            $quiz = $this->findQuizOrFail($quizId);
+            return $this->quizRepository->questionForQuiz($quiz);
+        } catch (\Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
+        }
+    }
+
     public function getQuizById($id)
     {
         try {
@@ -89,7 +102,4 @@ class QuizServices
             ];
         }
     }
-
-
-   
 }

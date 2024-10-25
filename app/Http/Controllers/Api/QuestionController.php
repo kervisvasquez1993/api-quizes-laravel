@@ -7,10 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
 use App\Http\Requests\Question\UpdateImageQuestionRequest;
 use App\Http\Requests\Question\UpdateQuestionRequest;
+use App\Http\Resources\QuizResource;
 use App\Services\Question\QuestionServices;
 use App\Services\Quiz\QuizServices;
 use Exception;
-use Illuminate\Http\Request;
+
 
 class QuestionController extends Controller
 {
@@ -21,6 +22,24 @@ class QuestionController extends Controller
     {
         $this->quizServices = $quizServices;
         $this->questionServices = $questionServices;
+    }
+
+    public function index()
+    {
+        $data = $this->quizServices->getAllQuizzes();
+        // return QuizResource::collection($data);
+    }
+    
+    public function questionForQuiz($quizId)
+    {
+        try {
+            $data = $this->quizServices->questionForQuiz($quizId);
+            return new QuizResource($data);
+        } catch (Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 422);
+        }
     }
     public function store(StoreQuestionRequest $request, $quizId)
     {

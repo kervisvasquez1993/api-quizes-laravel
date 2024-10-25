@@ -38,4 +38,9 @@ class QuizRepository  implements QuizRepositoryInterface
     {
         return Quiz::destroy($id);
     }
+    public function questionForQuiz(Quiz $quiz)
+    {
+        $quiz->load('questions');
+        return $quiz;
+    }
 }

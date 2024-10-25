@@ -7,6 +7,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Interface\Question\QuestionRepositoryInterface;
 use App\Models\Question;
+use App\Models\Quiz;
 use Exception;
 
 class QuestionServices
@@ -27,6 +28,11 @@ class QuestionServices
             throw new \Exception($message);
         }
         return $question;
+    }
+
+    public function questionForQuiz(Quiz $quiz){
+    
+        
     }
     public function createQuestion(QuestionDTO $questionDTO)
     {

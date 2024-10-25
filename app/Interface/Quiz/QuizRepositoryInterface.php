@@ -12,4 +12,6 @@ interface QuizRepositoryInterface
     public function createQuiz(QuizDTO $quiz);
     public function updateQuiz(Quiz $quiz, QuizDTO $updateQuiz);
     public function deletedQuiz($id);
+
+    public function questionForQuiz(Quiz $quiz);
 }
