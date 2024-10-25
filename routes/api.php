@@ -26,4 +26,5 @@ Route::middleware('auth:api')->group(function () {
     // questions
     Route::post('/quiz/{quizId}/questions', [QuestionController::class, 'store'])->name('createQuestionForQuiz');
     Route::put('/questions/{id}', [QuestionController::class, 'update'])->name('updateQuestion');
+    Route::post('/questions/{id}/image', [QuestionController::class, 'updateImage'])->name('updateImageQuestion');
 });

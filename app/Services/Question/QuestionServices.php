@@ -67,20 +67,24 @@ class QuestionServices
         return null;
     }
 
-    public function updateImage(?UploadedFile $file, int $questionId): ?string
+    public function updateImage(UploadedFile $file, int $questionId): array
     {
-        $question = $this->findQuestionOrFail($questionId);
 
-        if ($question->image) {
-            $this->deleteFile($question->image);
-        }
-        if ($file) {
+        try {
+            $question = $this->findQuestionOrFail($questionId);
+            if ($question->image) {
+                $this->deleteFile($question->image);
+            }
             $path = $file->store('questions', 'public');
-            $question->image = Storage::url($path);
-            $question->save();
-            return $question->image;
+            $imageUrl = Storage::url($path);
+            $updateImageQuestion = $this->questionRepository->updateImage($question, $imageUrl);
+            return ['success' => true, "data" => $updateImageQuestion, 'message' => 'Record updated successfully'];
+        } catch (\Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
         }
-        return null;
     }
 
     private function deleteFile(string $filePath): void

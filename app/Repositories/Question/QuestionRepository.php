@@ -27,4 +27,12 @@ class QuestionRepository  implements QuestionRepositoryInterface
         ]);
         return $question;
     }
+
+    public function updateImage(Question $question, string $imagePath): Question
+    {
+        $question->update([
+            "image" => $imagePath
+        ]);
+        return $question;
+    }
 }

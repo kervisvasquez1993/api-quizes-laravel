@@ -9,4 +9,5 @@ interface QuestionRepositoryInterface
 {
     public function createQuestion(QuestionDTO $questionDTO);
     public function updateQuestion(Question $question, QuestionDTO $questionDTO);
+    public function updateImage(Question $question, string $imagePath): Question;
 }
