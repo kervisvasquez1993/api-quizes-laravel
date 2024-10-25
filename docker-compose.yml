@@ -12,7 +12,7 @@ services:
       - ./storage:/var/www/html/storage
     environment:
       - APP_ENV=local
-      - APP_KEY=base64:your-app-key-here
+      - APP_KEY=base64:qDJI4rbUY3ohN2ec2UQLU5RwHd+EPbHL7SJaKKh399U=
       - DB_CONNECTION=sqlite
     ports:
       - "9000:9000"
