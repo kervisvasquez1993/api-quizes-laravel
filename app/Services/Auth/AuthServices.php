@@ -46,7 +46,7 @@ class AuthServices
             ];
         }
     }
-
+    
     public function register(RegisterDTO $registerDTO)
     {
         try {
