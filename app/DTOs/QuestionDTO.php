@@ -3,12 +3,13 @@
 namespace App\DTOs;
 
 use App\Http\Requests\Question\StoreQuestionRequest;
+use App\Http\Requests\Question\UpdateQuestionRequest;
 use Illuminate\Support\Facades\Auth;
 
 class QuestionDTO
 {
     public function __construct(
-        private readonly int $quizId,
+        private readonly string $quizId,
         private readonly string $question,
         private readonly ?string $image,
         private readonly bool $correctAnswer,
@@ -21,6 +22,17 @@ class QuestionDTO
             quizId: $quizId,
             question: $request->validated('question'),
             image: $img,
+            correctAnswer: $request->validated('correct_answer'),
+            userId: Auth::user()->id
+        );
+    }
+
+    public static function fromUpdateRequest(UpdateQuestionRequest $request): self
+    {
+        return new self(
+            quizId: $request->validated('quiz_id'),
+            question: $request->validated('question'),
+            image: null,
             correctAnswer: $request->validated('correct_answer'),
             userId: Auth::user()->id
         );

@@ -8,7 +8,7 @@ use App\Models\Question;
 
 class QuestionRepository  implements QuestionRepositoryInterface
 {
-    public function createQuestion(QuestionDTO $questionDTO)
+    public function createQuestion(QuestionDTO $questionDTO): Question
     {
         return Question::create([
             "question" => $questionDTO->getText(),
@@ -17,5 +17,14 @@ class QuestionRepository  implements QuestionRepositoryInterface
             "correct_answer" => $questionDTO->getCorrectAnswer(),
             "user_id" => $questionDTO->getUserId()
         ]);
+    }
+    public function updateQuestion(Question $question, QuestionDTO $questionDTO): Question
+    {
+        $question->update([
+            "quiz_id" => $questionDTO->getQuizId(),
+            "question" => $questionDTO->getText(),
+            "correct_answer" => $questionDTO->getCorrectAnswer()
+        ]);
+        return $question;
     }
 }

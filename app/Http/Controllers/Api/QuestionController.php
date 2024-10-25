@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\DTOs\QuestionDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
+use App\Http\Requests\Question\UpdateQuestionRequest;
 use App\Services\Question\QuestionServices;
 use App\Services\Quiz\QuizServices;
 use Exception;
@@ -38,5 +39,16 @@ class QuestionController extends Controller
                 'message' => $exception->getMessage()
             ], 422);
         }
+    }
+
+    public function update(UpdateQuestionRequest $request, $id)
+    {
+        $result = $this->questionServices->updateQuestion(QuestionDTO::fromUpdateRequest($request), $id);
+        if (!$result['success']) {
+            return response()->json([
+                'error' => $result['message']
+            ], 422);
+        }
+        return response()->json($result['data'], status: 200);
     }
 }
