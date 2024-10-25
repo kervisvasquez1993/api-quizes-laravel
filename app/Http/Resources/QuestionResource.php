@@ -16,12 +16,9 @@ class QuestionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'quiz_id' => $this->quiz_id,
+            'question' => $this->question,
             'user_id' => $this->user_id,
-            'image' => $this->image,
-            'correct_answer' => $this->correct_answer,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'image' => $this->image
         ];
     }
 }
