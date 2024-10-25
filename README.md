@@ -1,86 +1,52 @@
-# Projeto Laravel com Docker
+Project Laravel with Docker
+This project uses Laravel 11 and Docker to create a web application. Below are the steps to set up and run the project.
 
-Este projeto utiliza Laravel 11 e Docker para criar uma aplicação web. Abaixo estão os passos para configurar e executar o projeto.
+Requirements
+Docker
+Docker Compose
+Project Setup
+Build the Docker images:
+docker-compose build
 
-## Requisitos
-
-- Docker
-- Docker Compose
-
-## Configuração do Projeto
-
-1. **Construir as imagens do Docker:**
-
-   ```bash
-   docker-compose build
-Iniciar os contêineres em segundo plano:
+Start the containers in the background:
 docker-compose up -d
-Instalar as dependências do Composer:
+
+Install Composer dependencies:
 docker-compose exec app composer install
-Copiar o arquivo de exemplo de configuração:
+
+Copy the example configuration file:
 cp .env.example .env
-Executar migrações e semear a base de dados:
+
+Run migrations and seed the database:
 docker-compose exec app php artisan migrate --seed
-Gerar chaves para o Passport:
-docker-compose exec app php artisan passport:key
-docker-compose exec app php artisan passport:client --personal
-Criar links simbólicos para o armazenamento:
-docker-compose exec app php artisan storage:link
-Observação: Se você não estiver usando Docker para levantar o projeto, execute o seguinte comando para gerar a chave da aplicação:
-php artisan key:generate
-Estrutura do Projeto
-Trabalhamos com um padrão de design limpo seguindo o padrão de repositório, onde responsabilidades únicas são atribuídas a cada camada. As camadas trabalhadas são:
 
-Camada de Regras (Rules): Esta camada é responsável por definir as regras de negócio antes de chegar ao controlador.
+Generate keys for Passport:
+docker-compose exec app php artisan passport
 
-Controlador: O controlador é responsável por devolver a resposta HTTP junto com os dados solicitados.
+docker-compose exec app php artisan passport
+--personal
 
-Serviço: Nesta camada, é adicionada a lógica de negócio, onde as operações necessárias são gerenciadas.
+Create symbolic links for storage:
+docker-compose exec app php artisan storage
 
-Camada de Repositório: Esta camada interage com a base de dados, inserindo e recuperando informações. Funciona como intermediária entre o controlador e o serviço.
+Note: If you are not using Docker to run the project, execute the following command to generate the application key:
+php artisan key
 
-Além disso, inclui um DTO (Data Transfer Object) que auxilia na transferência de dados entre as diferentes camadas do sistema.
+Project Structure
+We worked with a clean design pattern following the repository pattern, where unique responsibilities are assigned to each layer. The layers worked on are:
 
-Estrutura do Banco de Dados
-Os modelos do banco de dados são os seguintes:
+Rules Layer: This layer is responsible for defining business rules before reaching the controller.
 
-Modelo User
-class User extends Authenticatable
-{
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+Controller: The controller is responsible for returning the HTTP response along with the requested data.
 
-    /**
-     * Os atributos que podem ser atribuídos em massa.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'username',
-        'email',
-        'password',
-        'role'
-    ];
-}
-Modelo Quiz
-class Quiz extends Model
-{
-    protected $table = 'quizzes';
-    protected $fillable = [
-        'title',
-        'description',
-        'user_id',
-    ];
-}
-Modelo Question
-class Question extends Model
-{
-    protected $table = 'questions';
-    protected $fillable = ['quiz_id', 'question', 'image', 'correct_answer', 'user_id'];
-}
+Service: In this layer, the business logic is added, where necessary operations are managed.
 
-Modelo PlayerAnswer
-class PlayerAnswer extends Model
-{
-    protected $fillable = ['user_id', 'question_id', 'given_answer', 'is_correct'];
-}
+Repository Layer: This layer interacts with the database, inserting and retrieving information. It serves as an intermediary between the controller and the service.
+
+Additionally, it includes a DTO (Data Transfer Object) that assists in transferring data between the different layers of the system.
+
+Database Structure
+User Model: username, email, password, role
+Quiz Model: title, description, user_id
+Question Model: quiz_id, question, image, correct_answer, user_id
+PlayerAnswer Model: user_id, question_id, given_answer, is_correct
