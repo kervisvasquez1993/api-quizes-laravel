@@ -37,7 +37,7 @@ class QuizServices
     public function questionForQuiz($quizId)
     {
         try {
-            $quiz = $this->getQuizById($quizId);
+            $quiz = $this->quizRepository->getQuizById($quizId);
             return $this->quizRepository->questionForQuiz($quiz);
         } catch (\Exception $exception) {
             return [

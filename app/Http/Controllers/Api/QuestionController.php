@@ -11,7 +11,7 @@ use App\Http\Resources\QuizResource;
 use App\Services\Question\QuestionServices;
 use App\Services\Quiz\QuizServices;
 use Exception;
-
+use Illuminate\Http\Response;
 
 class QuestionController extends Controller
 {
@@ -32,14 +32,12 @@ class QuestionController extends Controller
 
     public function questionForQuiz($quizId)
     {
-        try {
-            $data = $this->quizServices->questionForQuiz($quizId);
-            return new QuizResource($data);
-        } catch (Exception $exception) {
-            return response()->json([
-                'message' => $exception->getMessage()
-            ], 404);
+
+        $data = $this->quizServices->questionForQuiz($quizId);
+        if (isset($data['success']) && !$data['success']) {
+            return response()->json(["messages" => $data["message"]], Response::HTTP_NOT_FOUND);
         }
+        return new QuizResource($data);
     }
     /**
      * @OA\Post(
@@ -102,24 +100,29 @@ class QuestionController extends Controller
      *     )
      * )
      */
+    // public function store(StoreQuestionRequest $request, $quizId)
+    // {
+
+    //         $quiz = $this->quizServices->getQuizById($quizId);
+    //         if (isset($quiz['success']) && !$quiz['success']) {
+    //             return response()->json(["messages" => $quiz["message"]], Response::HTTP_NOT_FOUND);
+    //         }
+    //         $imgFile = $this->questionServices->saveFile($request->image);
+    //         $result = $this->questionServices->createQuestion(QuestionDTO::fromRequest($request, $quiz->id, $imgFile), $quizId);
+    //         if (!$result['success']) {
+    //             return response()->json([
+    //                 'error' => $result['message']
+    //             ], 422);
+    //         }
+    //         return response()->json($result['data'], status: 201);
+    // }
     public function store(StoreQuestionRequest $request, $quizId)
     {
-
-        try {
-            $quiz = $this->quizServices->findQuizOrFail($quizId);
-            $imgFile = $this->questionServices->saveFile($request->image);
-            $result = $this->questionServices->createQuestion(QuestionDTO::fromRequest($request, $quiz->id, $imgFile));
-            if (!$result['success']) {
-                return response()->json([
-                    'error' => $result['message']
-                ], 422);
-            }
-            return response()->json($result['data'], status: 201);
-        } catch (Exception $exception) {
-            return response()->json([
-                'message' => $exception->getMessage()
-            ], 422);
+        $data = $this->questionServices->createQuestionWithQuiz($request, $quizId);
+        if (isset($data['success']) && !$data['success']) {
+            return response()->json(["message" => $data["message"]], Response::HTTP_NOT_FOUND);
         }
+        return response()->json($data, 201);
     }
     /**
      * @OA\Put(
@@ -194,7 +197,7 @@ class QuestionController extends Controller
         $result = $this->questionServices->updateQuestion(QuestionDTO::fromUpdateRequest($request), $id);
         if (!$result['success']) {
             return response()->json([
-                'error' => $result['message']
+                'message' => $result['message']
             ], 422);
         }
         return response()->json($result['data'], status: 200);

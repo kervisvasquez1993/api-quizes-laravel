@@ -3,6 +3,8 @@
 namespace App\Services\Question;
 
 use App\DTOs\QuestionDTO;
+use App\Http\Requests\Question\StoreQuestionRequest;
+use App\Interface\Quiz\QuizRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Interface\Question\QuestionRepositoryInterface;
@@ -13,10 +15,12 @@ use Exception;
 class QuestionServices
 {
     protected QuestionRepositoryInterface $questionRepository;
+    protected QuizRepositoryInterface $quizRepository;
 
-    public function __construct(QuestionRepositoryInterface $questionRepository)
+    public function __construct(QuestionRepositoryInterface $questionRepository, QuizRepositoryInterface $quizRepository)
     {
         $this->questionRepository = $questionRepository;
+        $this->quizRepository = $quizRepository;
     }
 
 
@@ -30,22 +34,49 @@ class QuestionServices
         return $question;
     }
 
-    public function questionForQuiz(Quiz $quiz){
-    
-        
+    public function questionForQuiz(Quiz $quiz) {}
+
+    public function createQuestionWithQuiz(StoreQuestionRequest $request, $quizId)
+    {
+        try {
+            $quiz = $this->quizRepository->getQuizById($quizId);
+            $imgFile = $this->saveFile($request->image);
+            $questionDTO = QuestionDTO::fromRequest($request, $quiz->id, $imgFile);
+
+            $data = $this->createQuestion($questionDTO);
+
+            // Asegúrate de verificar que el resultado es exitoso
+            if (!$data['success']) {
+                return [
+                    'success' => false,
+                    'message' => $data['message'] ?? 'Error creating question'
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => $data['data']
+            ];
+        } catch (Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage() // Error al obtener o crear
+            ];
+        }
     }
-    public function createQuestion(QuestionDTO $questionDTO)
+
+    private function createQuestion(QuestionDTO $questionDTO)
     {
         try {
             $questionForQuiz = $this->questionRepository->createQuestion($questionDTO);
             return [
                 'success' => true,
-                'data' =>  $questionForQuiz
+                'data' => $questionForQuiz
             ];
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return [
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => "Error creating question: " . $exception->getMessage()
             ];
         }
     }
