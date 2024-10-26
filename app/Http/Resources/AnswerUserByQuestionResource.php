@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PlayerAnswerResourse extends JsonResource
+class AnswerUserByQuestionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,9 @@ class PlayerAnswerResourse extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'question_id' => $this->question_id,
-            'given_answer' => $this->given_answer,
             'is_correct' => $this->is_correct,
-            // 'question' => $this->question , 
+            'username' => $this->user->username,
+            'email' => $this->user->email
         ];
     }
 }

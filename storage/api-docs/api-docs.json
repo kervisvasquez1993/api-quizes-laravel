@@ -241,6 +241,297 @@
                 }
             }
         },
+        "/api/my-answer-question": {
+            "get": {
+                "tags": [
+                    "Respuestas"
+                ],
+                "summary": "Obtener las respuestas del usuario autenticado",
+                "description": "Este endpoint permite a los usuarios autenticados obtener una lista de sus respuestas a las preguntas, incluyendo si fueron correctas o incorrectas.",
+                "operationId": "getUserAnswers",
+                "responses": {
+                    "200": {
+                        "description": "Lista de respuestas del usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Identificador único de la respuesta",
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "user_id": {
+                                                        "description": "Identificador del usuario que respondió la pregunta",
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "is_correct": {
+                                                        "description": "Indica si la respuesta es correcta (1) o incorrecta (0)",
+                                                        "type": "boolean",
+                                                        "example": 0
+                                                    },
+                                                    "question_name": {
+                                                        "description": "Nombre o texto de la pregunta",
+                                                        "type": "string",
+                                                        "example": "pregunta falsa en el proyecto"
+                                                    },
+                                                    "question_image": {
+                                                        "description": "URL de la imagen asociada a la pregunta, si existe",
+                                                        "type": "string",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado - El usuario no está autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/{id}/answers": {
+            "get": {
+                "tags": [
+                    "Respuestas"
+                ],
+                "summary": "Obtener respuestas de un usuario específico",
+                "description": "Este endpoint permite obtener una lista de respuestas de un usuario en específico, identificándolo mediante su ID en la URL.",
+                "operationId": "getUserAnswersById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario cuyas respuestas se desean obtener",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de respuestas del usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Identificador único de la respuesta",
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "user_id": {
+                                                        "description": "ID del usuario que respondió la pregunta",
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "is_correct": {
+                                                        "description": "Indica si la respuesta es correcta (1) o incorrecta (0)",
+                                                        "type": "boolean",
+                                                        "example": 0
+                                                    },
+                                                    "question_name": {
+                                                        "description": "Nombre o texto de la pregunta",
+                                                        "type": "string",
+                                                        "example": "Pregunta de ejemplo"
+                                                    },
+                                                    "question_image": {
+                                                        "description": "URL de la imagen asociada a la pregunta, si existe",
+                                                        "type": "string",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado - El usuario no está autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Usuario no encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions/{id}/answers": {
+            "get": {
+                "tags": [
+                    "Respuestas"
+                ],
+                "summary": "Obtener respuestas de usuarios a una pregunta específica",
+                "description": "Este endpoint permite obtener una lista de respuestas de usuarios a una pregunta específica, junto con la información de si fue correcta y los datos del usuario.",
+                "operationId": "getAnswersByQuestion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la pregunta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de respuestas de usuarios para la pregunta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "ID de la respuesta",
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "is_correct": {
+                                                        "description": "Indica si la respuesta es correcta (1) o incorrecta (0)",
+                                                        "type": "boolean",
+                                                        "example": 1
+                                                    },
+                                                    "username": {
+                                                        "description": "Nombre de usuario que respondió",
+                                                        "type": "string",
+                                                        "example": "kervis1"
+                                                    },
+                                                    "email": {
+                                                        "description": "Correo electrónico del usuario",
+                                                        "type": "string",
+                                                        "example": "kvfa131@gmail.com"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pregunta no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for Question 5"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/quiz/{quizId}/questions": {
             "post": {
                 "tags": [
@@ -1122,6 +1413,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Respuestas",
+            "description": "Respuestas"
         },
         {
             "name": "Questions",

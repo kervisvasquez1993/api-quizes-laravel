@@ -24,4 +24,11 @@ class PlayerAnswerRepository  implements PlayerAnswerRepositoryInterface
             ->where('question_id', $questionId)
             ->first();
     }
+
+    public function questionByUserAnswer($questionId)
+    {
+        return PlayerAnswer::where('question_id', $questionId)
+            ->with('user') 
+            ->get();
+    }
 }

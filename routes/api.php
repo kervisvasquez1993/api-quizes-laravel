@@ -17,6 +17,9 @@ Route::get('/quiz/{id}', [QuizController::class, 'show'])->name('showQuiz');
 // questions
 Route::get('/quiz/{quizId}/questions', [QuestionController::class, 'questionForQuiz'])->name('getQuestionForQuiz');
 
+// player answer 
+Route::get('user/{id}/answers', [PlayerAnswerController::class, 'getUserAnswers'])->name('listUserAnswers');
+Route::get('questions/{id}/answers', [PlayerAnswerController::class, 'getAnswersByQuestion'])->name('listQuestionAnswers');
 
 
 
@@ -30,6 +33,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/questions/{id}/image', [QuestionController::class, 'updateImage'])->name('updateImageQuestion');
     Route::post('/questions/{questionsId}/player-answer', [PlayerAnswerController::class, 'store'])->name('playerAnswerQuestion');
     // player answer
-    Route::get('my-answer-question', [PlayerAnswerController::class, 'myAnwersQuestion'])->name('listMyAnswers');
-
+    Route::get('my-answer-question', [PlayerAnswerController::class, 'myAnswersQuestion'])->name('listMyAnswers');
 });
