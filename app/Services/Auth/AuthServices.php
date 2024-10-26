@@ -53,14 +53,14 @@ class AuthServices
             $user = $this->authRepository->createUser($registerDTO);
             return [
                 'success' => true,
-                'data' => [
-                    'user' => $user
-                ]
+                'data' =>  $user,
+                'error' => "test"
             ];
-        } catch (Exception $ex) {
+        } catch (Exception $exception) {
             return [
                 'success' => false,
-                'message' => $ex->getMessage()
+                'message' => $exception->getMessage(),
+                'code' => "442"
             ];
         }
     }

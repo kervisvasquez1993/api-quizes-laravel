@@ -5,6 +5,7 @@ namespace App\Http\Requests\PlayerAnswer;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class StorePlayerAnswerRequest extends FormRequest
@@ -36,7 +37,7 @@ class StorePlayerAnswerRequest extends FormRequest
                 'message' => 'Validation errors',
                 'data' => $validator->errors()
             ],
-            422
+            Response::HTTP_UNPROCESSABLE_ENTITY
         ));
     }
 

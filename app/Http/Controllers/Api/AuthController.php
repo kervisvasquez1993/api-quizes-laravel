@@ -114,8 +114,6 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-
-
         $result = $this->authServices->register(RegisterDTO::fromRequest($request));
         if (!$result['success']) {
             return response()->json([

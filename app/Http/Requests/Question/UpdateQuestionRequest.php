@@ -5,6 +5,7 @@ namespace App\Http\Requests\Question;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class UpdateQuestionRequest extends FormRequest
@@ -40,7 +41,7 @@ class UpdateQuestionRequest extends FormRequest
             [
                 'message' => 'Validation errors',
                 'data' => $validator->errors()
-            ], 422));
+            ], Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Quiz;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class UpdateQuizRequest extends FormRequest
@@ -35,7 +36,7 @@ class UpdateQuizRequest extends FormRequest
             [
                 'message' => 'Validation errors',
                 'data' => $validator->errors()
-            ]
+            ], Response::HTTP_UNPROCESSABLE_ENTITY
         ));
     }
     protected function failedAuthorization()
