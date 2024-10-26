@@ -28,7 +28,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/quiz/{quizId}/questions', [QuestionController::class, 'store'])->name('createQuestionForQuiz');
     Route::put('/questions/{id}', [QuestionController::class, 'update'])->name('updateQuestion');
     Route::post('/questions/{id}/image', [QuestionController::class, 'updateImage'])->name('updateImageQuestion');
-    // player answer
     Route::post('/questions/{questionsId}/player-answer', [PlayerAnswerController::class, 'store'])->name('playerAnswerQuestion');
+    // player answer
+    Route::get('my-answer-question', [PlayerAnswerController::class, 'myAnwersQuestion'])->name('listMyAnswers');
 
 });

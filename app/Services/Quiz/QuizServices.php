@@ -21,7 +21,7 @@ class QuizServices
     {
         $student = Quiz::find($id);
         if (!$student) {
-            $message = "No query results for model Student {$id}";
+            $message = "No query results for Quiz {$id}";
             throw new \Exception($message);
         }
         return $student;

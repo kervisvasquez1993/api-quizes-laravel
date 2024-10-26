@@ -10,6 +10,7 @@ class PlayerAnswerRepository  implements PlayerAnswerRepositoryInterface
 {
     public function createPlayerAnswer(PlayerAnswerDTO $playerAnswerDTO)
     {
+        error_log($playerAnswerDTO->getGivenAnswer());
         return PlayerAnswer::create([
             "user_id" => $playerAnswerDTO->getUserId(),
             "question_id" => $playerAnswerDTO->getQuestionId(),

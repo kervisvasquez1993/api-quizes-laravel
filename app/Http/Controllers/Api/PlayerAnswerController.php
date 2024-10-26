@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PlayerAnswer\StorePlayerAnswerRequest;
+use App\Http\Resources\PlayerAnswerResourse;
 use App\Services\PlayerAnwer\PlayerAnswerServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PlayerAnswerController extends Controller
 {
@@ -23,11 +25,18 @@ class PlayerAnswerController extends Controller
         //
     }
 
+    // public function myAnswer()
+    // {
+    //     $myAnswer = auth()->user()->playerAnswer;
+    //     return $myAnswer;
+    // }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StorePlayerAnswerRequest $request, $questionsId)
     {
+        error_log($request);
         $result = $this->playerAnswerServices->playerAnswerByQuestion($request, $questionsId);
         if (!$result['success']) {
             return response()->json([
@@ -35,6 +44,14 @@ class PlayerAnswerController extends Controller
             ], 422);
         }
         return response()->json($result['data'], status: 201);
+    }
+
+    public function myAnswersQuestion()
+    {
+        return "data"; 
+        $data = $this->playerAnswerServices->myAnswer();
+        return $data;
+        // return PlayerAnswerResource::collection($data);
     }
 
     /**
