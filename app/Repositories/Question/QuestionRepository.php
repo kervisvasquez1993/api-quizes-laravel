@@ -35,4 +35,7 @@ class QuestionRepository  implements QuestionRepositoryInterface
         ]);
         return $question;
     }
+    public function deletedQuestion($id){
+        return Question::destroy($id);
+    }
 }

@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/questions/{id}', [QuestionController::class, 'update'])->name('updateQuestion');
     Route::post('/questions/{id}/image', [QuestionController::class, 'updateImage'])->name('updateImageQuestion');
     Route::post('/questions/{questionsId}/player-answer', [PlayerAnswerController::class, 'store'])->name('playerAnswerQuestion');
+    Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('deletedQuestion');
     // player answer
     Route::get('my-answer-question', [PlayerAnswerController::class, 'myAnswersQuestion'])->name('listMyAnswers');
 });

@@ -5,6 +5,7 @@ namespace App\Services\Question;
 use App\DTOs\QuestionDTO;
 use App\Http\Requests\Question\StoreQuestionRequest;
 use App\Interface\Quiz\QuizRepositoryInterface;
+use App\Services\Auth\AuthServices;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Interface\Question\QuestionRepositoryInterface;
@@ -16,11 +17,13 @@ class QuestionServices
 {
     protected QuestionRepositoryInterface $questionRepository;
     protected QuizRepositoryInterface $quizRepository;
+    protected AuthServices $authServices;
 
-    public function __construct(QuestionRepositoryInterface $questionRepository, QuizRepositoryInterface $quizRepository)
+    public function __construct(QuestionRepositoryInterface $questionRepository, QuizRepositoryInterface $quizRepository, AuthServices $authServices)
     {
         $this->questionRepository = $questionRepository;
         $this->quizRepository = $quizRepository;
+        $this->authServices = $authServices;
     }
 
 
@@ -129,6 +132,25 @@ class QuestionServices
         $relativePath = str_replace('/storage/', '', $filePath);
         if (Storage::disk('public')->exists($relativePath)) {
             Storage::disk('public')->delete($relativePath);
+        }
+    }
+
+    public function deleteQuestion($id)
+    {
+        // TODO: ejecutar job para poder actualizar los puntos de los usuarios
+        try {
+            $this->authServices->validateRole();
+            $question = $this->findQuestionOrFail($id);
+            if ($question->image) {
+                $this->deleteFile($question->image);
+            }
+            $this->questionRepository->deletedQuestion($question->id);
+            return ['success' => true, 'data' => $question];
+        } catch (Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
         }
     }
 }

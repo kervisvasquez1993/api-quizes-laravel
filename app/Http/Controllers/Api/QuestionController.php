@@ -276,14 +276,25 @@ class QuestionController extends Controller
             $result = $this->questionServices->updateImage($request->image, $question->id);
             if (!$result['success']) {
                 return response()->json([
-                    'error' => $result['message']
+                    'message' => $result['message']
                 ], 422);
             }
             return response()->json($result['data'], status: 200);
         } catch (Exception $exception) {
             return response()->json([
-                'error' => $exception->getMessage()
+                'message' => $exception->getMessage()
             ], 404);
         }
+    }
+
+    public function destroy($id)
+    {
+        $data = $this->questionServices->deleteQuestion($id);
+        if (!$data['success']) {
+            return response()->json([
+                'message' => $data['message']
+            ], 404);
+        }
+        return response()->json($data["data"], 201);
     }
 }
