@@ -63,7 +63,7 @@ class AuthController extends Controller
         $result = $this->authServices->login(LoginDTO::fromRequest($request));
         if (!$result['success']) {
             return response()->json([
-                'error' => $result['message']
+                'message' => $result['message']
             ], 401);
         }
         return response()->json($result['data']);

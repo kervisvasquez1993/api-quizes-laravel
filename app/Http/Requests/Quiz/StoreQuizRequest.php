@@ -27,7 +27,7 @@ class StoreQuizRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255|unique:quizzes',
-            'description' => 'string|max:255'
+            'description' => 'string|max:255|unique:quizzes'
         ];
     }
     public function failedValidation(Validator $validator)

@@ -6,6 +6,10 @@ use App\DTOs\LoginDTO;
 use App\DTOs\RegisterDTO;
 use App\Interface\Auth\AuthRepositoryInterface;
 use Exception;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServices
 {
@@ -24,12 +28,10 @@ class AuthServices
             if (!$authResult['success']) {
                 return [
                     'success' => false,
-                    'message' => 'Los datos suministrados son incorrectos'
+                    'message' => 'The provided data is incorrect'
                 ];
             }
-
             $user = $authResult['user'];
-            error_log($user);
             $tokenResult = $this->authRepository->createAccessToken($user);
 
             return [
@@ -46,7 +48,7 @@ class AuthServices
             ];
         }
     }
-    
+
     public function register(RegisterDTO $registerDTO)
     {
         try {
@@ -62,6 +64,13 @@ class AuthServices
                 'message' => $exception->getMessage(),
                 'code' => "442"
             ];
+        }
+    }
+
+    public function validateRole()
+    {
+        if (!Gate::allows('validate-role', Auth::user())) {
+            throw new \Exception("You do not have permission to perform this action.");
         }
     }
 }

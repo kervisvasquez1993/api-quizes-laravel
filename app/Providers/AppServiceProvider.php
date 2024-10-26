@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Policies\AdminPolicy;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
+        Passport::loadKeysFrom(__DIR__ . '/../secrets/oauth');
+        Gate::define('validate-role', [AdminPolicy::class, 'ValidateAdmin']);
     }
 }

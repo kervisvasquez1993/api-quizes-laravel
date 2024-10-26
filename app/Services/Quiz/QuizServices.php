@@ -5,27 +5,30 @@ namespace App\Services\Quiz;
 use App\DTOs\QuizDTO;
 use App\Interface\Quiz\QuizRepositoryInterface;
 use App\Models\Quiz;
+use App\Services\Auth\AuthServices;
 use Exception;
 
 
 class QuizServices
 {
     protected QuizRepositoryInterface $quizRepository;
+    protected AuthServices $authServices;
 
-    public function __construct(QuizRepositoryInterface $quizRepository)
+    public function __construct(QuizRepositoryInterface $quizRepository, AuthServices $authServices)
     {
         $this->quizRepository = $quizRepository;
+        $this->authServices = $authServices;
     }
 
-    public function findQuizOrFail($id)
-    {
-        $student = Quiz::find($id);
-        if (!$student) {
-            $message = "No query results for Quiz {$id}";
-            throw new \Exception($message);
-        }
-        return $student;
-    }
+    // public function findQuizOrFail($id)
+    // {
+    //     $quiz = Quiz::find($id);
+    //     if (!$quiz) {
+    //         $message = "No query results for Quiz {$id}";
+    //         throw new \Exception($message);
+    //     }
+    //     return $quiz;
+    // }
     public function getAllQuizzes()
     {
         return $this->quizRepository->getAllQuiz();
@@ -34,7 +37,7 @@ class QuizServices
     public function questionForQuiz($quizId)
     {
         try {
-            $quiz = $this->findQuizOrFail($quizId);
+            $quiz = $this->getQuizById($quizId);
             return $this->quizRepository->questionForQuiz($quiz);
         } catch (\Exception $exception) {
             return [
@@ -56,19 +59,7 @@ class QuizServices
         }
     }
 
-    public function deletedQuiz($id)
-    {
-        try {
-            $this->findQuizOrFail($id);
-            $this->quizRepository->deletedQuiz($id);
-            return ['success' => true, 'message' => 'Record deleted successfully'];
-        } catch (\Exception $exception) {
-            return [
-                'success' => false,
-                'message' => $exception->getMessage()
-            ];
-        }
-    }
+
 
     public function createQuiz(QuizDTO $quiz)
     {
@@ -77,9 +68,8 @@ class QuizServices
             $quiz = $this->quizRepository->createQuiz($quiz);
             return [
                 'success' => true,
-                'data' => [
-                    'quiz' => $quiz
-                ]
+                'data' => $quiz
+
             ];
         } catch (Exception $exception) {
             return [
@@ -92,9 +82,25 @@ class QuizServices
     public function updateQuiz(QuizDTO $quizDTO, $id)
     {
         try {
-            $quiz = $this->findQuizOrFail($id);
+            $quiz = $this->quizRepository->getQuizById($id);
             $updatedQuiz = $this->quizRepository->updateQuiz($quiz, $quizDTO);
             return ['success' => true, "data" => $updatedQuiz, 'message' => 'Record updated successfully'];
+        } catch (\Exception $exception) {
+            error_log($exception);
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
+        }
+    }
+
+    public function deletedQuiz($id)
+    {
+        try {
+            $this->authServices->validateRole();
+            $quiz = $this->quizRepository->getQuizById($id);
+            $this->quizRepository->deletedQuiz($id);
+            return ['success' => true, 'data' => $quiz];
         } catch (\Exception $exception) {
             return [
                 'success' => false,

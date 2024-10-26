@@ -10,6 +10,7 @@ use App\Http\Requests\Quiz\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Services\Quiz\QuizServices;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class QuizController extends Controller
 {
@@ -28,11 +29,9 @@ class QuizController extends Controller
     public function show($id)
     {
         $data = $this->quizServices->getQuizById($id);
-
         if (isset($data['success']) && !$data['success']) {
-            return response()->json($data, 404);
+            return response()->json(["messages" => $data["message"]], Response::HTTP_NOT_FOUND);
         }
-
         return new QuizResource($data);
     }
 
@@ -171,65 +170,61 @@ class QuizController extends Controller
 
     public function update(UpdateQuizRequest $request, string $id)
     {
-        $result = $this->quizServices->updateQuiz(QuizDTO::fromUpdateRequest($request), $id);
-        if (!$result['success']) {
-            return response()->json([
-                'error' => $result['message']
-            ], 422);
+        $data = $this->quizServices->updateQuiz(QuizDTO::fromUpdateRequest($request), $id);
+        if (isset($data['success']) && !$data['success']) {
+            return response()->json(["messages" => $data["message"]], Response::HTTP_NOT_FOUND);
         }
-        return response()->json($result['data'], status: 200);
+        return response()->json($data['data'], status: 200);
     }
-/**
- * @OA\Delete(
- *     path="/quiz/{id}",
- *     tags={"Quiz"},
- *     summary="Delete a quiz",
- *     description="Requires authentication and admin role to delete a quiz.",
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="integer"),
- *         description="ID of the quiz to delete"
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Quiz deleted successfully",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Record deleted successfully")
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Quiz not found",
- *         @OA\JsonContent(
- *             @OA\Property(property="error", type="string", example="No query results for model Quiz 20")
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Unauthenticated",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Unauthenticated.")
- *         )
- *     ),
- *     @OA\Response(
- *         response=403,
- *         description="Not authorized",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="You are not authorized to perform this action.")
- *         )
- *     )
- * )
- */
-    public function destroy(DeleteQuizRequest $id)
+    /**
+     * @OA\Delete(
+     *     path="/quiz/{id}",
+     *     tags={"Quiz"},
+     *     summary="Delete a quiz",
+     *     description="Requires authentication and admin role to delete a quiz.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID of the quiz to delete"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Quiz deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Record deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Quiz not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="No query results for model Quiz 20")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Not authorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You are not authorized to perform this action.")
+     *         )
+     *     )
+     * )
+     */
+    public function destroy($id)
     {
         $data = $this->quizServices->deletedQuiz($id);
         if (isset($data['success']) && !$data['success']) {
-            return response()->json($data, 404);
+            return response()->json(["message" => $data['message']], 404);
         }
-        return response()->json([
-            'message' => $data["message"],
-        ], 201);
+        return response()->json( $data["data"], 201);
     }
 }

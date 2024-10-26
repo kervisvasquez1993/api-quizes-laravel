@@ -15,8 +15,13 @@ class QuizRepository  implements QuizRepositoryInterface
     }
     public function getQuizById($id)
     {
-        return Quiz::findOrFail($id);
+        $quiz = Quiz::find($id);
+        if (!$quiz) {
+            throw new \Exception("No results found for Quiz with ID {$id}");
+        }
+        return $quiz;
     }
+
 
     public function updateQuiz(Quiz $quiz, QuizDTO $quizDTO)
     {
@@ -34,13 +39,15 @@ class QuizRepository  implements QuizRepositoryInterface
             "user_id" => $quizDTO->getUserId()
         ]);
     }
-    public function deletedQuiz($id)
-    {
-        return Quiz::destroy($id);
-    }
+   
     public function questionForQuiz(Quiz $quiz)
     {
         $quiz->load('questions');
         return $quiz;
+    }
+
+    public function deletedQuiz($id)
+    {
+        return Quiz::destroy($id);
     }
 }
