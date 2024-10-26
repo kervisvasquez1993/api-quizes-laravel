@@ -4,13 +4,12 @@ namespace App\DTOs;
 
 use App\Http\Requests\PlayerAnswer\StorePlayerAnswerRequest;
 use Illuminate\Support\Facades\Auth;
-
 class PlayerAnswerDTO
 {
     public function __construct(
         private readonly int $questionId,
         private readonly int $userId,
-        private readonly string $givenAnswer,
+        private readonly bool $givenAnswer,
         private readonly bool $isCorrect
     ) {}
 
@@ -19,7 +18,7 @@ class PlayerAnswerDTO
         return new self(
             questionId: $questionId,
             userId: Auth::user()->id,
-            givenAnswer: $request->validated('given_answer'),
+            givenAnswer: (bool) $request->validated('given_answer'),
             isCorrect: $isCorrect
         );
     }
@@ -44,7 +43,7 @@ class PlayerAnswerDTO
         return $this->userId;
     }
 
-    public function getGivenAnswer(): string
+    public function getGivenAnswer(): bool
     {
         return $this->givenAnswer;
     }

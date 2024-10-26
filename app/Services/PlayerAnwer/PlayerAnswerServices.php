@@ -24,6 +24,10 @@ class PlayerAnswerServices
     {
         return $this->playerAnswerRepository->findAnswerByUserAndQuestion($userId, $questionId) !== null;
     }
+
+    public function myAnswer(){
+       return Auth::user()->playerAnswer;
+    }
     public function playerAnswerByQuestion($request, int $question)
     {
         try {

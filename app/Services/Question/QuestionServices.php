@@ -24,7 +24,7 @@ class QuestionServices
     {
         $question = Question::find($id);
         if (!$question) {
-            $message = "No query results for model Student {$id}";
+            $message = "No query results for Question {$id}";
             throw new \Exception($message);
         }
         return $question;
