@@ -9,8 +9,6 @@ use App\Services\Auth\AuthServices;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Interface\Question\QuestionRepositoryInterface;
-use App\Models\Question;
-use App\Models\Quiz;
 use Exception;
 
 class QuestionServices
@@ -29,15 +27,9 @@ class QuestionServices
 
     public function findQuestionOrFail($id)
     {
-        $question = Question::find($id);
-        if (!$question) {
-            $message = "No query results for Question {$id}";
-            throw new \Exception($message);
-        }
-        return $question;
+         return  $this->questionRepository->findQuestionById($id);
     }
 
-    public function questionForQuiz(Quiz $quiz) {}
 
     public function createQuestionWithQuiz(StoreQuestionRequest $request, $quizId)
     {
@@ -45,17 +37,13 @@ class QuestionServices
             $quiz = $this->quizRepository->getQuizById($quizId);
             $imgFile = $this->saveFile($request->image);
             $questionDTO = QuestionDTO::fromRequest($request, $quiz->id, $imgFile);
-
             $data = $this->createQuestion($questionDTO);
-
-            // Asegúrate de verificar que el resultado es exitoso
             if (!$data['success']) {
                 return [
                     'success' => false,
                     'message' => $data['message'] ?? 'Error creating question'
                 ];
             }
-
             return [
                 'success' => true,
                 'data' => $data['data']
@@ -63,7 +51,7 @@ class QuestionServices
         } catch (Exception $exception) {
             return [
                 'success' => false,
-                'message' => $exception->getMessage() // Error al obtener o crear
+                'message' => $exception->getMessage()
             ];
         }
     }
@@ -86,8 +74,9 @@ class QuestionServices
 
     public function updateQuestion(QuestionDTO $questionDTO, $id)
     {
+        // TODO: Ejecutar Job para actualizar los puntos de los usuarios
         try {
-            $question = $this->findQuestionOrFail($id);
+            $question = $this->questionRepository->findQuestionById($id);
             $updateQuestion = $this->questionRepository->updateQuestion($question, $questionDTO);
             return ['success' => true, "data" => $updateQuestion, 'message' => 'Record updated successfully'];
         } catch (\Exception $exception) {
@@ -111,7 +100,7 @@ class QuestionServices
     {
 
         try {
-            $question = $this->findQuestionOrFail($questionId);
+            $question = $this->questionRepository->findQuestionById($questionId);
             if ($question->image) {
                 $this->deleteFile($question->image);
             }
@@ -140,7 +129,7 @@ class QuestionServices
         // TODO: ejecutar job para poder actualizar los puntos de los usuarios
         try {
             $this->authServices->validateRole();
-            $question = $this->findQuestionOrFail($id);
+            $question = $this->questionRepository->findQuestionById($id);
             if ($question->image) {
                 $this->deleteFile($question->image);
             }

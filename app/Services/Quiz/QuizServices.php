@@ -19,16 +19,6 @@ class QuizServices
         $this->quizRepository = $quizRepository;
         $this->authServices = $authServices;
     }
-
-    // public function findQuizOrFail($id)
-    // {
-    //     $quiz = Quiz::find($id);
-    //     if (!$quiz) {
-    //         $message = "No query results for Quiz {$id}";
-    //         throw new \Exception($message);
-    //     }
-    //     return $quiz;
-    // }
     public function getAllQuizzes()
     {
         return $this->quizRepository->getAllQuiz();

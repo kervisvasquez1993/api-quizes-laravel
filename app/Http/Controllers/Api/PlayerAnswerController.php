@@ -222,7 +222,7 @@ class PlayerAnswerController extends Controller
         if (!$data["success"]) {
             return response()->json([
                 'message' => $data["message"]
-            ], $data["statusCode"]);
+            ], 404);
         }
         return AnswerUserByQuestionResource::collection($data['data']);;
     }

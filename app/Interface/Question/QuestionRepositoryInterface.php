@@ -7,6 +7,7 @@ use App\Models\Question;
 
 interface QuestionRepositoryInterface
 {
+    public function findQuestionById(string $id);
     public function createQuestion(QuestionDTO $questionDTO);
     public function updateQuestion(Question $question, QuestionDTO $questionDTO);
     public function updateImage(Question $question, string $imagePath): Question;

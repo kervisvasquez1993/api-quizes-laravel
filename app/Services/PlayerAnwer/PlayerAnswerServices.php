@@ -6,6 +6,7 @@ use App\DTOs\PlayerAnswerDTO;
 use App\Interface\PlayerAnwer\PlayerAnswerRepositoryInterface;
 use App\Models\Question;
 use App\Models\User;
+use App\Services\Auth\AuthServices;
 use App\Services\Question\QuestionServices;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -14,12 +15,14 @@ class PlayerAnswerServices
 {
     protected PlayerAnswerRepositoryInterface $playerAnswerRepository;
     protected QuestionServices $questionServices;
+    protected AuthServices $authServices;
 
 
-    public function __construct(PlayerAnswerRepositoryInterface $playerAnswerRepository, QuestionServices $questionServices)
+    public function __construct(PlayerAnswerRepositoryInterface $playerAnswerRepository, QuestionServices $questionServices, AuthServices $authServices)
     {
         $this->playerAnswerRepository = $playerAnswerRepository;
         $this->questionServices = $questionServices;
+        $this->authServices = $authServices;
     }
 
     public function hasUserAnsweredQuestion(int $userId, int $questionId): bool
@@ -57,7 +60,6 @@ class PlayerAnswerServices
             return [
                 'success' => false,
                 'message' => $exception->getMessage(),
-                "statusCode" => "404"
             ];
         }
     }
@@ -74,6 +76,10 @@ class PlayerAnswerServices
             $question = $this->questionServices->findQuestionOrFail($question);
             $isCorrect = (int) $question->correct_answer === (int) $request->given_answer;
             $playerAnswer = $this->playerAnswerRepository->createPlayerAnswer(PlayerAnswerDTO::fromRequest($request, $question->id, $isCorrect));
+            if ($isCorrect) {
+                $this->authServices->updateUserPoints($userId, 10);  
+            }
+    
             return [
                 'success' => true,
                 'data' =>  $playerAnswer

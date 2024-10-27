@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\DTOs\LoginDTO;
 use App\DTOs\RegisterDTO;
 use App\Interface\Auth\AuthRepositoryInterface;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
@@ -65,6 +66,17 @@ class AuthServices
                 'code' => "442"
             ];
         }
+    }
+
+    public function updateUserPoints(int $userId, int $points)
+    {
+        $user = User::findOrFail($userId);
+        if ($points < 0) {
+            $user->points = max(0, $user->points + $points);
+        } else {
+            $user->points += $points;
+        }
+        $user->save();
     }
 
     public function validateRole()

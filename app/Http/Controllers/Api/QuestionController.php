@@ -282,7 +282,7 @@ class QuestionController extends Controller
             return response()->json($result['data'], status: 200);
         } catch (Exception $exception) {
             return response()->json([
-                'message' => $exception->getMessage()
+                'messages' => $exception->getMessage()
             ], 404);
         }
     }
