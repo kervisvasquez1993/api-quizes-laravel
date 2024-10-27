@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PlayerAnswer\StorePlayerAnswerRequest;
 use App\Http\Resources\AnswerUserByQuestionResource;
 use App\Http\Resources\PlayerAnswerResource;
-use App\Http\Resources\PlayerAnswerResourse;
 use App\Services\PlayerAnwer\PlayerAnswerServices;
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class PlayerAnswerController extends Controller
 {

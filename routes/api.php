@@ -16,14 +16,20 @@ Route::get('/quiz', [QuizController::class, 'index'])->name('listarQuiz');
 Route::get('/quiz/{id}', [QuizController::class, 'show'])->name('showQuiz');
 // questions
 Route::get('/quiz/{quizId}/questions', [QuestionController::class, 'questionForQuiz'])->name('getQuestionForQuiz');
-
 // player answer 
-Route::get('user/{id}/answers', [PlayerAnswerController::class, 'getUserAnswers'])->name('listUserAnswers');
+Route::get('/user/{id}/answers', [PlayerAnswerController::class, 'getUserAnswers'])->name('listUserAnswers');
 Route::get('questions/{id}/answers', [PlayerAnswerController::class, 'getAnswersByQuestion'])->name('listQuestionAnswers');
+// user
+Route::get('/list-user-point', [AuthController::class, 'listUserPoint'])->name('listPointByUser');
 
 
 
 Route::middleware('auth:api')->group(function () {
+    //user
+    Route::get('/me', [AuthController::class, 'me'])->name('me');
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+
+    // quiz
     Route::post('/quiz', [QuizController::class, 'store'])->name('createQuiz');
     Route::put('/quiz/{id}', [QuizController::class, 'update'])->name('updateQuiz');
     Route::delete('/quiz/{id}', [QuizController::class, 'destroy'])->name('updateQuiz');
@@ -34,5 +40,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/questions/{questionsId}/player-answer', [PlayerAnswerController::class, 'store'])->name('playerAnswerQuestion');
     Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('deletedQuestion');
     // player answer
-    Route::get('my-answer-question', [PlayerAnswerController::class, 'myAnswersQuestion'])->name('listMyAnswers');
+    Route::get('/my-answer-question', [PlayerAnswerController::class, 'myAnswersQuestion'])->name('listMyAnswers');
 });

@@ -37,13 +37,12 @@ class PlayerAnswerServices
 
     public function getUserAnswersById($id)
     {
-
-        $data = User::findOrFail($id)->playerAnswer;
+        $data = User::find($id);
         if (!$data) {
-            $message = "No query results for Question {$id}";
+            $message = "No query results for User {$id}";
             throw new \Exception($message);
         }
-        return $data;
+        return $data->playerAnswer;
     }
 
     public function getQuestionAnswersById($questionId)
