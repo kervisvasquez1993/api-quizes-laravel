@@ -13,7 +13,7 @@ class QuizServices
 {
     protected QuizRepositoryInterface $quizRepository;
     protected AuthServices $authServices;
-
+    
     public function __construct(QuizRepositoryInterface $quizRepository, AuthServices $authServices)
     {
         $this->quizRepository = $quizRepository;
