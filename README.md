@@ -12,29 +12,25 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
 1. **Clona el repositorio y navega a la carpeta del proyecto:**
 
  
-    git clone <URL_DO_REPOSITORIO>
-   cd <NOME_DO_PROJETO>
+  ##   git clone <URL_DO_REPOSITORIO>
+
+   ##  cd <NOME_DO_PROJETO>
    
-   Copie o arquivo de ambiente:
+   - Copie o arquivo de ambiente:
     
     ```
      cp .env.example .env
  
     ```
-
-     ```
-     docker-compose up -d --build
- 
     ```
-
- ```
-docker-compose exec app php artisan migrate:fresh --seed
- ```
-  ```
-
-
-docker-compose exec app php artisan passport:client --personal
- ```
+      docker-compose up -d --build 
+    ```
+     ```
+          docker-compose exec app php artisan migrate:fresh --seed
+     ```
+     ```
+          docker-compose exec app php artisan passport:client --personal
+     ```
 
 
 
