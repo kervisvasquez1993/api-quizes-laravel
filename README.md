@@ -20,15 +20,11 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
     
     ```
      cp .env.example .env
- 
-    ```
-    ```
+
      docker-compose up -d --build 
-    ```
-     ```
+ 
      docker-compose exec app php artisan migrate:fresh --seed
-     ```
-     ```
+   
      docker-compose exec app php artisan passport:client --personal
      ```
 
