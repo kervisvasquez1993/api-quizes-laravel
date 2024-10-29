@@ -12,65 +12,64 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
 1. **Clona el repositorio y navega a la carpeta del proyecto:**
 
    ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   cd <NOMBRE_DEL_PROYECTO>
+    git clone <URL_DO_REPOSITORIO>
+   cd <NOME_DO_PROJETO>
    
-   Copia el archivo de entorno:
+   Copie o arquivo de ambiente:
 
    cp .env.example .env
 
-    Levanta los contenedores de Docker:
+   Levante os contêineres do Docker:
 
-    docker-compose up -d
+   docker-compose up -d
 
-    Instala las dependencias de Composer:
+   Instale as dependências do Composer:
 
-    Ejecuta Composer dentro del contenedor de la aplicación:
+   Execute o Composer dentro do contêiner da aplicação:
 
-    docker-compose exec app composer install
+   docker-compose exec app composer install
 
-    Ejecuta las migraciones y los seeders:
+   Execute as migrações e seeders:
 
-    Esto crea la base de datos y llena las tablas con datos iniciales:
+   Isso cria o banco de dados e preenche as tabelas com dados iniciais:
 
-    docker-compose exec app php artisan migrate:fresh --seed
+   docker-compose exec app php artisan migrate:fresh --seed
 
-    Configura Passport para autenticación de API:
+   Configure o Passport para autenticação de API:
 
-    Crea un cliente personal de Passport para el manejo de tokens:
+   Crie um cliente pessoal do Passport para gerenciar os tokens:
 
-    docker-compose exec app php artisan passport:client --personal
+   docker-compose exec app php artisan passport:client --personal
 
-    Crea el enlace simbólico para almacenamiento:
+   Crie o link simbólico para armazenamento:
 
-    Esto hace que el almacenamiento público esté disponible en /storage:
+   Isso torna o armazenamento público disponível em /storage:
     
-    docker-compose exec app php artisan storage:link
+   docker-compose exec app php artisan storage:link
 
-    Ajusta los permisos de las carpetas:
+   Ajuste as permissões das pastas:
 
-    docker-compose exec app chown -R www-data:www-data /var/www/html -R
+   docker-compose exec app chown -R www-data:www-data /var/www/html -R
 
-    Inicia el worker para procesar los jobs:
+   Inicie o worker para processar os jobs:
 
-    Laravel usa colas para gestionar tareas en segundo plano, y puedes iniciar 
-    un worker para que procese los jobs en la base de datos:
+   O Laravel usa filas para gerenciar tarefas em segundo plano. Você pode iniciar 
+   um worker para processar os jobs no banco de dados:
 
-    docker-compose exec app php artisan queue:work --daemon
+   docker-compose exec app php artisan queue:work --daemon
 
+   Agora, você pode acessar a aplicação em http://localhost:8000
 
-    Ahora, puedes acceder a la aplicación en http://localhost:8000
+   Comandos Úteis
+   Desligar os contêineres:
 
-    Comandos Útiles
-    Apagar los contenedores:
+   docker-compose down
 
-    docker-compose down
+   Executar comandos adicionais do Artisan:
 
-    Ejecutar comandos de Artisan adicionales:
+   Você pode executar qualquer comando do Artisan com:
 
-    Puedes ejecutar cualquier comando de Artisan con:
-
-    docker-compose exec app php artisan <comando>
+   docker-compose exec app php artisan <comando>
     
     ```
 
