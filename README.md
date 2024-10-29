@@ -11,69 +11,30 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
 
 1. **Clona el repositorio y navega a la carpeta del proyecto:**
 
-   ```bash
+ 
     git clone <URL_DO_REPOSITORIO>
    cd <NOME_DO_PROJETO>
    
    Copie o arquivo de ambiente:
-
-    cp .env.example .env
-
-   Levante os contêineres do Docker:
-
-   docker-compose up -d
-
-   Instale as dependências do Composer:
-
-   Execute o Composer dentro do contêiner da aplicação:
-
-   docker-compose exec app composer install
-
-   Execute as migrações e seeders:
-
-   Isso cria o banco de dados e preenche as tabelas com dados iniciais:
-
-   docker-compose exec app php artisan migrate:fresh --seed
-
-   Configure o Passport para autenticação de API:
-
-   Crie um cliente pessoal do Passport para gerenciar os tokens:
-
-   docker-compose exec app php artisan passport:client --personal
-
-   Crie o link simbólico para armazenamento:
-
-   Isso torna o armazenamento público disponível em /storage:
-    
-   docker-compose exec app php artisan storage:link
-
-   Ajuste as permissões das pastas:
-
-   docker-compose exec app chown -R www-data:www-data /var/www/html -R
-
-   Inicie o worker para processar os jobs:
-
-   O Laravel usa filas para gerenciar tarefas em segundo plano. Você pode iniciar 
-   um worker para processar os jobs no banco de dados:
-
-   docker-compose exec app php artisan queue:work --daemon
-
-   Agora, você pode acessar a aplicação em http://localhost:8000
-
-   Comandos Úteis
-   Desligar os contêineres:
-
-   docker-compose down
-
-   Executar comandos adicionais do Artisan:
-
-   Você pode executar qualquer comando do Artisan com:
-
-   docker-compose exec app php artisan <comando>
     
     ```
+     cp .env.example .env
+ 
+    ```
+
+     ```
+     docker-compose up -d --build
+ 
+    ```
+
+ ```
+docker-compose exec app php artisan migrate:fresh --seed
+ ```
+  ```
 
 
+docker-compose exec app php artisan passport:client --personal
+ ```
 
 
 
