@@ -29,6 +29,20 @@ class QuestionServices
     {
          return  $this->questionRepository->findQuestionById($id);
     }
+    public function show($id){
+        try{
+            $data =  $this->questionRepository->findQuestionById($id);
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        }catch(Exception $exception){
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
+        }
+    }
 
 
     public function createQuestionWithQuiz(StoreQuestionRequest $request, $quizId)

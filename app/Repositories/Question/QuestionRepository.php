@@ -10,7 +10,7 @@ class QuestionRepository  implements QuestionRepositoryInterface
 {
 
     public function findQuestionById($id){
-        $question = Question::find($id);
+        $question = Question::with('quiz')->find($id);
         if (!$question) {
             $message = "No query results for Question {$id}";
             throw new \Exception($message);

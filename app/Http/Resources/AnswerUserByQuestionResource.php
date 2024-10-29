@@ -18,7 +18,8 @@ class AnswerUserByQuestionResource extends JsonResource
             'id' => $this->id,
             'is_correct' => $this->is_correct,
             'username' => $this->user->username,
-            'email' => $this->user->email
+            'email' => $this->user->email,
+            'point' => $this->user->points
         ];
     }
 }

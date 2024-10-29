@@ -17,8 +17,11 @@ class QuestionResource extends JsonResource
         return [
             'id' => $this->id,
             'question' => $this->question,
-            'user_id' => $this->user_id,
-            'image' => $this->image
+            'image' => $this->image,
+            'correct_answer' => $this->correct_answer,
+            'answer_count' => $this->answer_count,
+            'quiz_name' => $this->quiz->title,
+            'quiz_id' => $this->quiz->id
         ];
     }
 }

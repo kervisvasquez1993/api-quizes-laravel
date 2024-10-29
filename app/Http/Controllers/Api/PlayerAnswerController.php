@@ -41,7 +41,7 @@ class PlayerAnswerController extends Controller
         $result = $this->playerAnswerServices->playerAnswerByQuestion($request, $questionsId);
         if (!$result['success']) {
             return response()->json([
-                'error' => $result['message']
+                'message' => $result['message']
             ], 422);
         }
         return response()->json($result['data'], status: 201);

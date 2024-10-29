@@ -7,11 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
 use App\Http\Requests\Question\UpdateImageQuestionRequest;
 use App\Http\Requests\Question\UpdateQuestionRequest;
+use App\Http\Resources\QuestionResource;
 use App\Http\Resources\QuizResource;
+use App\Models\Question;
 use App\Services\Question\QuestionServices;
 use App\Services\Quiz\QuizServices;
 use Exception;
 use Illuminate\Http\Response;
+
 
 class QuestionController extends Controller
 {
@@ -26,8 +29,9 @@ class QuestionController extends Controller
 
     public function index()
     {
-        $data = $this->quizServices->getAllQuizzes();
-        // return QuizResource::collection($data);
+        // TODO: AJUSTAR ESTO PARA ENVIARLO A LA LOGIA QUE CORRESPONDE 
+        $data = Question::with('quiz')->get();
+        return QuestionResource::collection($data);
     }
 
     public function questionForQuiz($quizId)
@@ -122,7 +126,7 @@ class QuestionController extends Controller
         if (isset($data['success']) && !$data['success']) {
             return response()->json(["message" => $data["message"]], Response::HTTP_NOT_FOUND);
         }
-        return response()->json($data, 201);
+        return response()->json($data["data"], 201);
     }
     /**
      * @OA\Put(
@@ -285,6 +289,16 @@ class QuestionController extends Controller
                 'messages' => $exception->getMessage()
             ], 404);
         }
+    }
+    public function show($id)
+    {
+        $data = $this->questionServices->show($id);
+        if (!$data['success']) {
+            return response()->json([
+                'message' => $data['message']
+            ], 404);
+        }
+        return response()->json($data["data"], 200);
     }
 
     public function destroy($id)

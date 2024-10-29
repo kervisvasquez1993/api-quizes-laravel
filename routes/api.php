@@ -16,6 +16,8 @@ Route::get('/quiz', [QuizController::class, 'index'])->name('listarQuiz');
 Route::get('/quiz/{id}', [QuizController::class, 'show'])->name('showQuiz');
 // questions
 Route::get('/quiz/{quizId}/questions', [QuestionController::class, 'questionForQuiz'])->name('getQuestionForQuiz');
+Route::get('/questions', [QuestionController::class, 'index'])->name('listAll');
+Route::get('/questions/{id}', [QuestionController::class, 'show'])->name('showQuestion');
 // player answer 
 Route::get('/user/{id}/answers', [PlayerAnswerController::class, 'getUserAnswers'])->name('listUserAnswers');
 Route::get('questions/{id}/answers', [PlayerAnswerController::class, 'getAnswersByQuestion'])->name('listQuestionAnswers');
