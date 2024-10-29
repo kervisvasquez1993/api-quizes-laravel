@@ -4,6 +4,7 @@ namespace App\Services\Quiz;
 
 use App\DTOs\QuizDTO;
 use App\Interface\Quiz\QuizRepositoryInterface;
+use App\Jobs\CalculateUserPoints;
 use App\Models\Quiz;
 use App\Services\Auth\AuthServices;
 use Exception;
@@ -90,6 +91,7 @@ class QuizServices
             $this->authServices->validateRole();
             $quiz = $this->quizRepository->getQuizById($id);
             $this->quizRepository->deletedQuiz($id);
+            CalculateUserPoints::dispatch();
             return ['success' => true, 'data' => $quiz];
         } catch (\Exception $exception) {
             return [

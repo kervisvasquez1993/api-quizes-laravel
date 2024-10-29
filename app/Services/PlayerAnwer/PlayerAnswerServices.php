@@ -62,6 +62,23 @@ class PlayerAnswerServices
             ];
         }
     }
+
+    public function userOrdeByPoint()
+    {
+        try {
+            $data = $this->playerAnswerRepository->userOrdeByPoint();
+            return [
+                'success' => true,
+                'data' => $data
+            ];
+        } catch (Exception $exception) {
+            return [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
+        }
+    }
+
     public function playerAnswerByQuestion($request, int $question)
     {
         try {
@@ -76,9 +93,9 @@ class PlayerAnswerServices
             $isCorrect = (int) $question->correct_answer === (int) $request->given_answer;
             $playerAnswer = $this->playerAnswerRepository->createPlayerAnswer(PlayerAnswerDTO::fromRequest($request, $question->id, $isCorrect));
             if ($isCorrect) {
-                $this->authServices->updateUserPoints($userId, 10);  
+                $this->authServices->updateUserPoints($userId, 10);
             }
-    
+
             return [
                 'success' => true,
                 'data' =>  $playerAnswer

@@ -224,4 +224,14 @@ class PlayerAnswerController extends Controller
         }
         return AnswerUserByQuestionResource::collection($data['data']);;
     }
+
+    public function pointForUser(){
+        $data = $this->playerAnswerServices->userOrdeByPoint();
+        if (!$data["success"]) {
+            return response()->json([
+                'message' => $data["message"]
+            ], 404);
+        }
+        return response()->json($data["data"], 200);
+    }
 }

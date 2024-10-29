@@ -5,6 +5,7 @@ namespace App\Repositories\PlayerAnswer;
 use App\DTOs\PlayerAnswerDTO;
 use App\Interface\PlayerAnwer\PlayerAnswerRepositoryInterface;
 use App\Models\PlayerAnswer;
+use App\Models\User;
 
 class PlayerAnswerRepository  implements PlayerAnswerRepositoryInterface
 {
@@ -30,5 +31,9 @@ class PlayerAnswerRepository  implements PlayerAnswerRepositoryInterface
         return PlayerAnswer::where('question_id', $questionId)
             ->with('user') 
             ->get();
+    }
+
+    public function userOrdeByPoint(){
+        return User::orderBy('points', 'desc')->get();
     }
 }

@@ -68,6 +68,7 @@ class AuthController extends Controller
         }
         return response()->json($result['data']);
     }
+    
     /**
      * @OA\Post(
      *     path="/api/register",
@@ -122,4 +123,5 @@ class AuthController extends Controller
         }
         return response()->json($result['data'], 201);
     }
+    
 }

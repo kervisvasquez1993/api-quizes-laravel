@@ -5,6 +5,8 @@ namespace App\Services\Question;
 use App\DTOs\QuestionDTO;
 use App\Http\Requests\Question\StoreQuestionRequest;
 use App\Interface\Quiz\QuizRepositoryInterface;
+use App\Jobs\CalculateUserPoints;
+use App\Jobs\UpdatePlayerAnswersJob;
 use App\Services\Auth\AuthServices;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -27,16 +29,17 @@ class QuestionServices
 
     public function findQuestionOrFail($id)
     {
-         return  $this->questionRepository->findQuestionById($id);
+        return  $this->questionRepository->findQuestionById($id);
     }
-    public function show($id){
-        try{
+    public function show($id)
+    {
+        try {
             $data =  $this->questionRepository->findQuestionById($id);
             return [
                 'success' => true,
                 'data' => $data
             ];
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             return [
                 'success' => false,
                 'message' => $exception->getMessage()
@@ -88,10 +91,14 @@ class QuestionServices
 
     public function updateQuestion(QuestionDTO $questionDTO, $id)
     {
-        // TODO: Ejecutar Job para actualizar los puntos de los usuarios
         try {
             $question = $this->questionRepository->findQuestionById($id);
+
+            $originalAnswer = $question->correct_answer;
             $updateQuestion = $this->questionRepository->updateQuestion($question, $questionDTO);
+            if ($updateQuestion->correct_answer !== $originalAnswer) {
+                UpdatePlayerAnswersJob::dispatch($updateQuestion);
+            }
             return ['success' => true, "data" => $updateQuestion, 'message' => 'Record updated successfully'];
         } catch (\Exception $exception) {
             return [
@@ -140,7 +147,7 @@ class QuestionServices
 
     public function deleteQuestion($id)
     {
-        // TODO: ejecutar job para poder actualizar los puntos de los usuarios
+
         try {
             $this->authServices->validateRole();
             $question = $this->questionRepository->findQuestionById($id);
@@ -148,6 +155,7 @@ class QuestionServices
                 $this->deleteFile($question->image);
             }
             $this->questionRepository->deletedQuestion($question->id);
+            CalculateUserPoints::dispatch();
             return ['success' => true, 'data' => $question];
         } catch (Exception $exception) {
             return [

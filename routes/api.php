@@ -23,6 +23,7 @@ Route::get('/user/{id}/answers', [PlayerAnswerController::class, 'getUserAnswers
 Route::get('questions/{id}/answers', [PlayerAnswerController::class, 'getAnswersByQuestion'])->name('listQuestionAnswers');
 // user
 Route::get('/list-user-point', [AuthController::class, 'listUserPoint'])->name('listPointByUser');
+Route::get('/players-position', [PlayerAnswerController::class, 'pointForUser'])->name('listPointByUser');
 
 
 
