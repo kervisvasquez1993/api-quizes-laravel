@@ -7,7 +7,7 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Instrucciones de Configuración
+     Instrucciones de Configuración
 
 1. **Clona el repositorio y navega a la carpeta del proyecto:**
 
@@ -17,7 +17,7 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
    
    Copie o arquivo de ambiente:
 
-   cp .env.example .env
+    cp .env.example .env
 
    Levante os contêineres do Docker:
 
