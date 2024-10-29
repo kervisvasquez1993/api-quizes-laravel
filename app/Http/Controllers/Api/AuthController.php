@@ -24,8 +24,8 @@ class AuthController extends Controller
      * @OA\Post(
      *     path="/api/login",
      *     tags={"Auth"},
-     *     summary="User login",
-     *     description="Authenticates a user and returns an access token.",
+     *     summary="Login do usuário",
+     *     description="Autentica um usuário e retorna um token de acesso.",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -36,7 +36,7 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Successful login",
+     *         description="Login bem-sucedido",
      *         @OA\JsonContent(
      *             @OA\Property(property="access_token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."),
      *             @OA\Property(property="data", type="object",
@@ -51,13 +51,14 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Unauthorized",
+     *         description="Não autorizado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string", example="Los datos suministrados son incorrectos")
+     *             @OA\Property(property="error", type="string", example="Os dados fornecidos estão incorretos")
      *         )
      *     )
      * )
      */
+
     public function login(LoginRequest $request)
     {
         $result = $this->authServices->login(LoginDTO::fromRequest($request));
@@ -68,13 +69,13 @@ class AuthController extends Controller
         }
         return response()->json($result['data']);
     }
-    
+
     /**
      * @OA\Post(
      *     path="/api/register",
      *     tags={"Auth"},
-     *     summary="User registration",
-     *     description="Registers a new user and returns user data.",
+     *     summary="Registro de usuário",
+     *     description="Registra um novo usuário e retorna os dados do usuário.",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -87,7 +88,7 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="User registered successfully",
+     *         description="Usuário registrado com sucesso",
      *         @OA\JsonContent(
      *             @OA\Property(property="user", type="object",
      *                 @OA\Property(property="username", type="string", example="kervis1"),
@@ -101,18 +102,19 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Validation errors",
+     *         description="Erros de validação",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Validation errors"),
+     *             @OA\Property(property="message", type="string", example="Erros de validação"),
      *             @OA\Property(property="data", type="object",
-     *                 @OA\Property(property="username", type="array", @OA\Items(type="string", example="The username field is required.")),
-     *                 @OA\Property(property="email", type="array", @OA\Items(type="string", example="The email field is required.")),
-     *                 @OA\Property(property="password", type="array", @OA\Items(type="string", example="The password field is required."))
+     *                 @OA\Property(property="username", type="array", @OA\Items(type="string", example="O campo username é obrigatório.")),
+     *                 @OA\Property(property="email", type="array", @OA\Items(type="string", example="O campo email é obrigatório.")),
+     *                 @OA\Property(property="password", type="array", @OA\Items(type="string", example="O campo password é obrigatório."))
      *             )
      *         )
      *     )
      * )
      */
+
     public function register(RegisterRequest $request)
     {
         $result = $this->authServices->register(RegisterDTO::fromRequest($request));
@@ -123,5 +125,4 @@ class AuthController extends Controller
         }
         return response()->json($result['data'], 201);
     }
-    
 }

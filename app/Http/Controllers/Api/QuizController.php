@@ -20,71 +20,130 @@ class QuizController extends Controller
         $this->quizServices = $quizServices;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/quiz",
+     *  tags={"Quiz"},
+     *     summary="Obter todos os quizzes",
+     *     description="Retorna uma lista de todos os quizzes disponíveis.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de quizzes",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=19),
+     *                     @OA\Property(property="title", type="string", example="Quiz 2"),
+     *                     @OA\Property(property="description", type="string", example="Queremos eliminar um quiz de forma correta")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $data = $this->quizServices->getAllQuizzes();
         return QuizResource::collection($data);
     }
+    /**
+     * @OA\Get(
+     *     path="/api/quiz/{id}",
+     *     tags={"Quiz"},
+     *     summary="Obter um quiz específico",
+     *     description="Retorna um quiz com base no ID fornecido.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID do quiz",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Quiz encontrado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=19),
+     *                 @OA\Property(property="title", type="string", example="Quiz 2"),
+     *                 @OA\Property(property="description", type="string", example="Queremos eliminar um quiz de forma correta")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Quiz não encontrado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="No results found for Quiz with ID 190")
+     *         )
+     *     )
+     * )
+     */
 
     public function show($id)
     {
         $data = $this->quizServices->getQuizById($id);
         if (isset($data['success']) && !$data['success']) {
-            return response()->json(["messages" => $data["message"]], Response::HTTP_NOT_FOUND);
+            return response()->json(["message" => $data["message"]], Response::HTTP_NOT_FOUND);
         }
         return new QuizResource($data);
     }
 
     /**
      * @OA\Post(
-     *     path="/quiz",
+     *     path="/api/quiz",
      *     tags={"Quiz"},
-     *     summary="Create a new quiz",
-     *     description="Requires authentication and admin role to create a quiz.",
+     *     summary="Criar um novo quiz",
+     *     description="Cria um novo quiz com base nos dados fornecidos. Apenas usuários com o papel de administrador podem criar um novo registro.",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"title", "description"},
-     *             @OA\Property(property="title", type="string", example="quiz example"),
-     *             @OA\Property(property="description", type="string", example="Descripcion de ejemplo")
+     *             type="object",
+     *             @OA\Property(property="title", type="string", example="Quiz 5"),
+     *             @OA\Property(property="description", type="string", example="Esto es una descripcion 5")
      *         )
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Quiz created successfully",
+     *         description="Quiz criado com sucesso",
      *         @OA\JsonContent(
-     *             @OA\Property(property="quiz", type="object",
-     *                 @OA\Property(property="title", type="string", example="Cristianismo"),
-     *                 @OA\Property(property="description", type="string", example="Esto es una desripcion de amor"),
-     *                 @OA\Property(property="user_id", type="integer", example=1),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-25T20:05:28.000000Z"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-25T20:05:28.000000Z"),
-     *                 @OA\Property(property="id", type="integer", example=1)
-     *             )
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=20),
+     *             @OA\Property(property="title", type="string", example="Quiz 5"),
+     *             @OA\Property(property="description", type="string", example="Esto es uma descrição 5"),
+     *             @OA\Property(property="user_id", type="integer", example=1),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-29T02:19:50.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-29T02:19:50.000000Z")
      *         )
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Validation errors",
+     *         description="Erros de validação",
      *         @OA\JsonContent(
+     *             type="object",
      *             @OA\Property(property="message", type="string", example="Validation errors"),
-     *             @OA\Property(property="data", type="object",
-     *                 @OA\Property(property="title", type="array", @OA\Items(type="string", example="The title field is required."))
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="title",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="The title has already been taken.")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="The description has already been taken.")
+     *                 )
      *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Not authorized",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="You are not authorized to perform this action.")
      *         )
      *     )
      * )
@@ -99,75 +158,74 @@ class QuizController extends Controller
         }
         return response()->json($result['data'], status: 201);
     }
+
+
+
     /**
      * @OA\Put(
-     *     path="/quiz/{id}",
-     *     tags={"Quiz"},
-     *     summary="Update an existing quiz",
-     *     description="Requires authentication and admin role to update a quiz.",
+     *     path="/api/quiz/{id}",
+     *     tags={"Quiz"}, 
+     *     summary="Atualizar um quiz existente",
+     *     description="Atualiza um quiz existente com base nos dados fornecidos. Apenas usuários com o papel de administrador podem realizar esta ação.",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="ID of the quiz to update"
+     *         @OA\Schema(type="integer", example=20)
      *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"title", "description"},
-     *             @OA\Property(property="title", type="string", example="update title"),
-     *             @OA\Property(property="description", type="string", example="Esto es una description de comida111")
+     *             type="object",
+     *             @OA\Property(property="title", type="string", example="ada update"),
+     *             @OA\Property(property="description", type="string", example="Esto es una actualizacion1")
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Quiz updated successfully",
+     *         description="Quiz atualizado com sucesso",
      *         @OA\JsonContent(
-     *             @OA\Property(property="quiz", type="object",
-     *                 @OA\Property(property="title", type="string", example="update title"),
-     *                 @OA\Property(property="description", type="string", example="Esto es una description de comida111"),
-     *                 @OA\Property(property="user_id", type="integer", example=1),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-25T20:05:28.000000Z"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-25T20:05:28.000000Z"),
-     *                 @OA\Property(property="id", type="integer", example=1)
-     *             )
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=20),
+     *             @OA\Property(property="title", type="string", example="ada update"),
+     *             @OA\Property(property="description", type="string", example="Esto es uma atualizacao1"),
+     *             @OA\Property(property="user_id", type="integer", example=1),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-29T02:19:50.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-29T09:19:34.000000Z")
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Quiz not found",
+     *         description="Quiz não encontrado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string", example="No query results for model Quiz 20")
+     *             type="object",
+     *             @OA\Property(property="messages", type="string", example="No results found for Quiz with ID 2122")
      *         )
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Validation errors",
+     *         description="Erros de validação",
      *         @OA\JsonContent(
+     *             type="object",
      *             @OA\Property(property="message", type="string", example="Validation errors"),
-     *             @OA\Property(property="data", type="object",
-     *                 @OA\Property(property="title", type="array", @OA\Items(type="string", example="The title field is required."))
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="title",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="The title has already been taken.")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="The description has already been taken.")
+     *                 )
      *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Not authorized",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="You are not authorized to perform this action.")
      *         )
      *     )
      * )
      */
-
     public function update(UpdateQuizRequest $request, string $id)
     {
         $data = $this->quizServices->updateQuiz(QuizDTO::fromUpdateRequest($request), $id);
@@ -176,45 +234,38 @@ class QuizController extends Controller
         }
         return response()->json($data['data'], status: 200);
     }
+
     /**
      * @OA\Delete(
-     *     path="/quiz/{id}",
-     *     tags={"Quiz"},
-     *     summary="Delete a quiz",
-     *     description="Requires authentication and admin role to delete a quiz.",
+     *     path="/api/quiz/{id}",
+     *     tags={"Quiz"}, 
+     *     summary="Deletar um quiz existente",
+     *     description="Remove um quiz existente. Apenas usuários com o papel de administrador podem realizar esta ação.",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="ID of the quiz to delete"
+     *         @OA\Schema(type="integer", example=20)
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Quiz deleted successfully",
+     *         description="Quiz removido com sucesso",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Record deleted successfully")
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=20),
+     *             @OA\Property(property="title", type="string", example="ada 2"),
+     *             @OA\Property(property="description", type="string", example="tes amo hija"),
+     *             @OA\Property(property="user_id", type="integer", example=1),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-28T21:02:46.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-28T21:02:46.000000Z")
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Quiz not found",
+     *         description="Quiz não encontrado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string", example="No query results for model Quiz 20")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Not authorized",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="You are not authorized to perform this action.")
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="No results found for Quiz with ID 20")
      *         )
      *     )
      * )
@@ -225,6 +276,6 @@ class QuizController extends Controller
         if (isset($data['success']) && !$data['success']) {
             return response()->json(["message" => $data['message']], 404);
         }
-        return response()->json( $data["data"], 201);
+        return response()->json($data["data"], 201);
     }
 }

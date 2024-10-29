@@ -35,6 +35,54 @@ class PlayerAnswerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    /**
+     * @OA\Post(
+     *     path="/api/questions/{id}/player-answer",
+     *     tags={"Jogo"},
+     *     summary="Registrar resposta do jogador para uma pergunta",
+     *     description="Permite que um jogador registre sua resposta para uma pergunta específica. O usuário não pode responder a pergunta mais de uma vez.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID da pergunta para a qual o jogador está respondendo.",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="given_answer", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Resposta do jogador registrada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="user_id", type="integer", example=2),
+     *             @OA\Property(property="question_id", type="integer", example=25),
+     *             @OA\Property(property="given_answer", type="boolean", example=true),
+     *             @OA\Property(property="is_correct", type="boolean", example=false),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-29T09:50:05.000000Z"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-29T09:50:05.000000Z"),
+     *             @OA\Property(property="id", type="integer", example=13)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erro ao registrar resposta",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You have already answered this question.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pergunta não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="No results found for Question with ID 25")
+     *         )
+     *     )
+     * )
+     */
     public function store(StorePlayerAnswerRequest $request, $questionsId)
     {
 
@@ -50,43 +98,44 @@ class PlayerAnswerController extends Controller
     /**
      * @OA\Get(
      *     path="/api/my-answer-question",
-     *     summary="Obtener las respuestas del usuario autenticado",
-     *     description="Este endpoint permite a los usuarios autenticados obtener una lista de sus respuestas a las preguntas, incluyendo si fueron correctas o incorrectas.",
+     *     summary="Obter as respostas do usuário autenticado",
+     *     description="Este endpoint permite que usuários autenticados obtenham uma lista de suas respostas às perguntas, incluindo se foram corretas ou incorretas.",
      *     operationId="getUserAnswers",
-     *     tags={"Respuestas"},
+     *     tags={"Jogo"},
      *     security={{"bearerAuth": {}}},
      *
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de respuestas del usuario",
+     *         description="Lista de respostas do usuário",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
      *                 @OA\Items(
-     *                     @OA\Property(property="id", type="integer", example=1, description="Identificador único de la respuesta"),
-     *                     @OA\Property(property="user_id", type="integer", example=3, description="Identificador del usuario que respondió la pregunta"),
-     *                     @OA\Property(property="is_correct", type="boolean", example=0, description="Indica si la respuesta es correcta (1) o incorrecta (0)"),
-     *                     @OA\Property(property="question_name", type="string", example="pregunta falsa en el proyecto", description="Nombre o texto de la pregunta"),
-     *                     @OA\Property(property="question_image", type="string", nullable=true, example=null, description="URL de la imagen asociada a la pregunta, si existe")
+     *                     @OA\Property(property="id", type="integer", example=1, description="Identificador único da resposta"),
+     *                     @OA\Property(property="user_id", type="integer", example=3, description="Identificador do usuário que respondeu à pergunta"),
+     *                     @OA\Property(property="is_correct", type="boolean", example=0, description="Indica se a resposta é correta (1) ou incorreta (0)"),
+     *                     @OA\Property(property="question_name", type="string", example="pergunta falsa no projeto", description="Nome ou texto da pergunta"),
+     *                     @OA\Property(property="question_image", type="string", nullable=true, example=null, description="URL da imagem associada à pergunta, se existir")
      *                 )
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="No autorizado - El usuario no está autenticado",
+     *         description="Não autorizado - O usuário não está autenticado",
      *         @OA\JsonContent(
      *             @OA\Property(property="error", type="string", example="Unauthorized")
      *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Error interno del servidor"
+     *         description="Erro interno do servidor"
      *     )
      * )
      */
+
     public function myAnswersQuestion()
     {
         $data = $this->playerAnswerServices->myAnswer();
@@ -95,34 +144,34 @@ class PlayerAnswerController extends Controller
     /**
      * @OA\Get(
      *     path="/api/user/{id}/answers",
-     *     summary="Obtener respuestas de un usuario específico",
-     *     description="Este endpoint permite obtener una lista de respuestas de un usuario en específico, identificándolo mediante su ID en la URL.",
+     *     summary="Obter respostas de um usuário específico",
+     *     description="Este endpoint permite obter uma lista de respostas de um usuário específico, identificando-o pelo seu ID na URL.",
      *     operationId="getUserAnswersById",
-     *     tags={"Respuestas"},
+     *     tags={"Jogo"},
      *     security={{"bearerAuth": {}}},
      * 
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID del usuario cuyas respuestas se desean obtener",
+     *         description="ID do usuário cujas respostas se deseja obter",
      *         @OA\Schema(type="integer")
      *     ),
      * 
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de respuestas del usuario",
+     *         description="Lista de respostas do usuário",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
      *                 @OA\Items(
-     *                     @OA\Property(property="id", type="integer", example=1, description="Identificador único de la respuesta"),
-     *                     @OA\Property(property="user_id", type="integer", example=3, description="ID del usuario que respondió la pregunta"),
-     *                     @OA\Property(property="is_correct", type="boolean", example=0, description="Indica si la respuesta es correcta (1) o incorrecta (0)"),
-     *                     @OA\Property(property="question_name", type="string", example="Pregunta de ejemplo", description="Nombre o texto de la pregunta"),
-     *                     @OA\Property(property="question_image", type="string", nullable=true, example=null, description="URL de la imagen asociada a la pregunta, si existe")
+     *                     @OA\Property(property="id", type="integer", example=1, description="Identificador único da resposta"),
+     *                     @OA\Property(property="user_id", type="integer", example=3, description="ID do usuário que respondeu à pergunta"),
+     *                     @OA\Property(property="is_correct", type="boolean", example=0, description="Indica se a resposta é correta (1) ou incorreta (0)"),
+     *                     @OA\Property(property="question_name", type="string", example="Pergunta de exemplo", description="Nome ou texto da pergunta"),
+     *                     @OA\Property(property="question_image", type="string", nullable=true, example=null, description="URL da imagem associada à pergunta, se existir")
      *                 )
      *             )
      *         )
@@ -130,7 +179,7 @@ class PlayerAnswerController extends Controller
      * 
      *     @OA\Response(
      *         response=401,
-     *         description="No autorizado - El usuario no está autenticado",
+     *         description="Não autorizado - O usuário não está autenticado",
      *         @OA\JsonContent(
      *             @OA\Property(property="error", type="string", example="Unauthorized")
      *         )
@@ -138,21 +187,22 @@ class PlayerAnswerController extends Controller
      * 
      *     @OA\Response(
      *         response=404,
-     *         description="Usuario no encontrado",
+     *         description="Usuário não encontrado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string", example="Usuario no encontrado")
+     *             @OA\Property(property="error", type="string", example="Usuário não encontrado")
      *         )
      *     ),
      * 
      *     @OA\Response(
      *         response=500,
-     *         description="Error interno del servidor",
+     *         description="Erro interno do servidor",
      *         @OA\JsonContent(
      *             @OA\Property(property="error", type="string", example="Internal Server Error")
      *         )
      *     )
      * )
      */
+
     public function getUserAnswers($id)
     {
         try {
@@ -167,33 +217,33 @@ class PlayerAnswerController extends Controller
     /**
      * @OA\Get(
      *     path="/api/questions/{id}/answers",
-     *     summary="Obtener respuestas de usuarios a una pregunta específica",
-     *     description="Este endpoint permite obtener una lista de respuestas de usuarios a una pregunta específica, junto con la información de si fue correcta y los datos del usuario.",
+     *     summary="Obter respostas de usuários para uma pergunta específica",
+     *     description="Este endpoint permite obter uma lista de respostas de usuários para uma pergunta específica, juntamente com informações sobre se a resposta foi correta e os dados do usuário.",
      *     operationId="getAnswersByQuestion",
-     *     tags={"Respuestas"},
+     *     tags={"Jogo"},
      *     security={{"bearerAuth": {}}},
      *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID de la pregunta",
+     *         description="ID da pergunta",
      *         @OA\Schema(type="integer")
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de respuestas de usuarios para la pregunta",
+     *         description="Lista de respostas de usuários para a pergunta",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
      *                 @OA\Items(
-     *                     @OA\Property(property="id", type="integer", example=3, description="ID de la respuesta"),
-     *                     @OA\Property(property="is_correct", type="boolean", example=1, description="Indica si la respuesta es correcta (1) o incorrecta (0)"),
-     *                     @OA\Property(property="username", type="string", example="kervis1", description="Nombre de usuario que respondió"),
-     *                     @OA\Property(property="email", type="string", example="kvfa131@gmail.com", description="Correo electrónico del usuario")
+     *                     @OA\Property(property="id", type="integer", example=3, description="ID da resposta"),
+     *                     @OA\Property(property="is_correct", type="boolean", example=1, description="Indica se a resposta é correta (1) ou incorreta (0)"),
+     *                     @OA\Property(property="username", type="string", example="kervis1", description="Nome de usuário que respondeu"),
+     *                     @OA\Property(property="email", type="string", example="kvfa131@gmail.com", description="Endereço de e-mail do usuário")
      *                 )
      *             )
      *         )
@@ -201,7 +251,7 @@ class PlayerAnswerController extends Controller
      *
      *     @OA\Response(
      *         response=404,
-     *         description="Pregunta no encontrada",
+     *         description="Pergunta não encontrada",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="message", type="string", example="No query results for Question 5")
@@ -210,10 +260,11 @@ class PlayerAnswerController extends Controller
      *
      *     @OA\Response(
      *         response=500,
-     *         description="Error interno del servidor"
+     *         description="Erro interno do servidor"
      *     )
      * )
      */
+
     public function getAnswersByQuestion($id)
     {
         $data = $this->playerAnswerServices->getQuestionAnswersById($id);
@@ -225,7 +276,49 @@ class PlayerAnswerController extends Controller
         return AnswerUserByQuestionResource::collection($data['data']);;
     }
 
-    public function pointForUser(){
+    /**
+     * @OA\Get(
+     *     path="/api/players-position",
+     *     summary="Obtener puntos por usuarios",
+     *     description="Este endpoint retorna una lista de todos los usuarios ordenados de mayor a menor según sus puntos.",
+     *     operationId="getPlayersPosition",
+     *     tags={"Jogo"},
+     *     security={{"bearerAuth": {}}},
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de usuarios ordenados por puntos",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1, description="ID do usuário"),
+     *                 @OA\Property(property="username", type="string", example="admin", description="Nome de usuário"),
+     *                 @OA\Property(property="email", type="string", example="admin@example.com", description="Endereço de e-mail do usuário"),
+     *                 @OA\Property(property="role", type="string", example="admin", description="Função do usuário"),
+     *                 @OA\Property(property="points", type="integer", example=0, description="Pontuação do usuário"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-26T19:01:07.000000Z", description="Data de criação do usuário"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-29T07:45:27.000000Z", description="Data de atualização do usuário")
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado - O usuário não está autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor"
+     *     )
+     * )
+     */
+
+    public function pointForUser()
+    {
         $data = $this->playerAnswerServices->userOrdeByPoint();
         if (!$data["success"]) {
             return response()->json([

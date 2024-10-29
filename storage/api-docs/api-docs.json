@@ -1,10 +1,10 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Mi API Documentation",
+        "title": "Quiz App",
         "description": "Documentación de mi API REST",
         "contact": {
-            "email": "tu@email.com"
+            "email": "kvfa13@gmail.com"
         },
         "version": "1.0.0"
     },
@@ -14,8 +14,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "User login",
-                "description": "Authenticates a user and returns an access token.",
+                "summary": "Login do usuário",
+                "description": "Autentica um usuário e retorna um token de acesso.",
                 "operationId": "222b2625838e3c57e017987f73598fda",
                 "requestBody": {
                     "required": true,
@@ -44,7 +44,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successful login",
+                        "description": "Login bem-sucedido",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -91,14 +91,14 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "Não autorizado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "error": {
                                             "type": "string",
-                                            "example": "Los datos suministrados son incorrectos"
+                                            "example": "Os dados fornecidos estão incorretos"
                                         }
                                     },
                                     "type": "object"
@@ -114,8 +114,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "User registration",
-                "description": "Registers a new user and returns user data.",
+                "summary": "Registro de usuário",
+                "description": "Registra um novo usuário e retorna os dados do usuário.",
                 "operationId": "8e4e3cb7b46126f4696379d3c7eeb4ad",
                 "requestBody": {
                     "required": true,
@@ -154,7 +154,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "User registered successfully",
+                        "description": "Usuário registrado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -197,14 +197,14 @@
                         }
                     },
                     "422": {
-                        "description": "Validation errors",
+                        "description": "Erros de validação",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Validation errors"
+                                            "example": "Erros de validação"
                                         },
                                         "data": {
                                             "properties": {
@@ -212,21 +212,21 @@
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The username field is required."
+                                                        "example": "O campo username é obrigatório."
                                                     }
                                                 },
                                                 "email": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The email field is required."
+                                                        "example": "O campo email é obrigatório."
                                                     }
                                                 },
                                                 "password": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The password field is required."
+                                                        "example": "O campo password é obrigatório."
                                                     }
                                                 }
                                             },
@@ -241,17 +241,130 @@
                 }
             }
         },
+        "/api/questions/{id}/player-answer": {
+            "post": {
+                "tags": [
+                    "Jogo"
+                ],
+                "summary": "Registrar resposta do jogador para uma pergunta",
+                "description": "Permite que um jogador registre sua resposta para uma pergunta específica. O usuário não pode responder a pergunta mais de uma vez.",
+                "operationId": "08e8df2f1b083a20a5e543e390b30867",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da pergunta para a qual o jogador está respondendo.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "given_answer": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Resposta do jogador registrada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "question_id": {
+                                            "type": "integer",
+                                            "example": 25
+                                        },
+                                        "given_answer": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "is_correct": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T09:50:05.000000Z"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T09:50:05.000000Z"
+                                        },
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 13
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao registrar resposta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have already answered this question."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pergunta não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No results found for Question with ID 25"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/my-answer-question": {
             "get": {
                 "tags": [
-                    "Respuestas"
+                    "Jogo"
                 ],
-                "summary": "Obtener las respuestas del usuario autenticado",
-                "description": "Este endpoint permite a los usuarios autenticados obtener una lista de sus respuestas a las preguntas, incluyendo si fueron correctas o incorrectas.",
+                "summary": "Obter as respostas do usuário autenticado",
+                "description": "Este endpoint permite que usuários autenticados obtenham uma lista de suas respostas às perguntas, incluindo se foram corretas ou incorretas.",
                 "operationId": "getUserAnswers",
                 "responses": {
                     "200": {
-                        "description": "Lista de respuestas del usuario",
+                        "description": "Lista de respostas do usuário",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -261,27 +374,27 @@
                                             "items": {
                                                 "properties": {
                                                     "id": {
-                                                        "description": "Identificador único de la respuesta",
+                                                        "description": "Identificador único da resposta",
                                                         "type": "integer",
                                                         "example": 1
                                                     },
                                                     "user_id": {
-                                                        "description": "Identificador del usuario que respondió la pregunta",
+                                                        "description": "Identificador do usuário que respondeu à pergunta",
                                                         "type": "integer",
                                                         "example": 3
                                                     },
                                                     "is_correct": {
-                                                        "description": "Indica si la respuesta es correcta (1) o incorrecta (0)",
+                                                        "description": "Indica se a resposta é correta (1) ou incorreta (0)",
                                                         "type": "boolean",
                                                         "example": 0
                                                     },
                                                     "question_name": {
-                                                        "description": "Nombre o texto de la pregunta",
+                                                        "description": "Nome ou texto da pergunta",
                                                         "type": "string",
-                                                        "example": "pregunta falsa en el proyecto"
+                                                        "example": "pergunta falsa no projeto"
                                                     },
                                                     "question_image": {
-                                                        "description": "URL de la imagen asociada a la pregunta, si existe",
+                                                        "description": "URL da imagem associada à pergunta, se existir",
                                                         "type": "string",
                                                         "example": null,
                                                         "nullable": true
@@ -297,7 +410,7 @@
                         }
                     },
                     "401": {
-                        "description": "No autorizado - El usuario no está autenticado",
+                        "description": "Não autorizado - O usuário não está autenticado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -313,7 +426,7 @@
                         }
                     },
                     "500": {
-                        "description": "Error interno del servidor"
+                        "description": "Erro interno do servidor"
                     }
                 },
                 "security": [
@@ -326,16 +439,16 @@
         "/api/user/{id}/answers": {
             "get": {
                 "tags": [
-                    "Respuestas"
+                    "Jogo"
                 ],
-                "summary": "Obtener respuestas de un usuario específico",
-                "description": "Este endpoint permite obtener una lista de respuestas de un usuario en específico, identificándolo mediante su ID en la URL.",
+                "summary": "Obter respostas de um usuário específico",
+                "description": "Este endpoint permite obter uma lista de respostas de um usuário específico, identificando-o pelo seu ID na URL.",
                 "operationId": "getUserAnswersById",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID del usuario cuyas respuestas se desean obtener",
+                        "description": "ID do usuário cujas respostas se deseja obter",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -344,7 +457,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de respuestas del usuario",
+                        "description": "Lista de respostas do usuário",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -354,27 +467,27 @@
                                             "items": {
                                                 "properties": {
                                                     "id": {
-                                                        "description": "Identificador único de la respuesta",
+                                                        "description": "Identificador único da resposta",
                                                         "type": "integer",
                                                         "example": 1
                                                     },
                                                     "user_id": {
-                                                        "description": "ID del usuario que respondió la pregunta",
+                                                        "description": "ID do usuário que respondeu à pergunta",
                                                         "type": "integer",
                                                         "example": 3
                                                     },
                                                     "is_correct": {
-                                                        "description": "Indica si la respuesta es correcta (1) o incorrecta (0)",
+                                                        "description": "Indica se a resposta é correta (1) ou incorreta (0)",
                                                         "type": "boolean",
                                                         "example": 0
                                                     },
                                                     "question_name": {
-                                                        "description": "Nombre o texto de la pregunta",
+                                                        "description": "Nome ou texto da pergunta",
                                                         "type": "string",
-                                                        "example": "Pregunta de ejemplo"
+                                                        "example": "Pergunta de exemplo"
                                                     },
                                                     "question_image": {
-                                                        "description": "URL de la imagen asociada a la pregunta, si existe",
+                                                        "description": "URL da imagem associada à pergunta, se existir",
                                                         "type": "string",
                                                         "example": null,
                                                         "nullable": true
@@ -390,7 +503,7 @@
                         }
                     },
                     "401": {
-                        "description": "No autorizado - El usuario no está autenticado",
+                        "description": "Não autorizado - O usuário não está autenticado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -406,14 +519,14 @@
                         }
                     },
                     "404": {
-                        "description": "Usuario no encontrado",
+                        "description": "Usuário não encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "error": {
                                             "type": "string",
-                                            "example": "Usuario no encontrado"
+                                            "example": "Usuário não encontrado"
                                         }
                                     },
                                     "type": "object"
@@ -422,7 +535,7 @@
                         }
                     },
                     "500": {
-                        "description": "Error interno del servidor",
+                        "description": "Erro interno do servidor",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -448,16 +561,16 @@
         "/api/questions/{id}/answers": {
             "get": {
                 "tags": [
-                    "Respuestas"
+                    "Jogo"
                 ],
-                "summary": "Obtener respuestas de usuarios a una pregunta específica",
-                "description": "Este endpoint permite obtener una lista de respuestas de usuarios a una pregunta específica, junto con la información de si fue correcta y los datos del usuario.",
+                "summary": "Obter respostas de usuários para uma pergunta específica",
+                "description": "Este endpoint permite obter uma lista de respostas de usuários para uma pergunta específica, juntamente com informações sobre se a resposta foi correta e os dados do usuário.",
                 "operationId": "getAnswersByQuestion",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID de la pregunta",
+                        "description": "ID da pergunta",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -466,7 +579,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de respuestas de usuarios para la pregunta",
+                        "description": "Lista de respostas de usuários para a pergunta",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -476,22 +589,22 @@
                                             "items": {
                                                 "properties": {
                                                     "id": {
-                                                        "description": "ID de la respuesta",
+                                                        "description": "ID da resposta",
                                                         "type": "integer",
                                                         "example": 3
                                                     },
                                                     "is_correct": {
-                                                        "description": "Indica si la respuesta es correcta (1) o incorrecta (0)",
+                                                        "description": "Indica se a resposta é correta (1) ou incorreta (0)",
                                                         "type": "boolean",
                                                         "example": 1
                                                     },
                                                     "username": {
-                                                        "description": "Nombre de usuario que respondió",
+                                                        "description": "Nome de usuário que respondeu",
                                                         "type": "string",
                                                         "example": "kervis1"
                                                     },
                                                     "email": {
-                                                        "description": "Correo electrónico del usuario",
+                                                        "description": "Endereço de e-mail do usuário",
                                                         "type": "string",
                                                         "example": "kvfa131@gmail.com"
                                                     }
@@ -506,7 +619,7 @@
                         }
                     },
                     "404": {
-                        "description": "Pregunta no encontrada",
+                        "description": "Pergunta não encontrada",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -522,7 +635,7 @@
                         }
                     },
                     "500": {
-                        "description": "Error interno del servidor"
+                        "description": "Erro interno do servidor"
                     }
                 },
                 "security": [
@@ -532,19 +645,212 @@
                 ]
             }
         },
-        "/quiz/{quizId}/questions": {
-            "post": {
+        "/api/players-position": {
+            "get": {
+                "tags": [
+                    "Jogo"
+                ],
+                "summary": "Obtener puntos por usuarios",
+                "description": "Este endpoint retorna una lista de todos los usuarios ordenados de mayor a menor según sus puntos.",
+                "operationId": "getPlayersPosition",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuarios ordenados por puntos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "ID do usuário",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "username": {
+                                                "description": "Nome de usuário",
+                                                "type": "string",
+                                                "example": "admin"
+                                            },
+                                            "email": {
+                                                "description": "Endereço de e-mail do usuário",
+                                                "type": "string",
+                                                "example": "admin@example.com"
+                                            },
+                                            "role": {
+                                                "description": "Função do usuário",
+                                                "type": "string",
+                                                "example": "admin"
+                                            },
+                                            "points": {
+                                                "description": "Pontuação do usuário",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "created_at": {
+                                                "description": "Data de criação do usuário",
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-10-26T19:01:07.000000Z"
+                                            },
+                                            "updated_at": {
+                                                "description": "Data de atualização do usuário",
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-10-29T07:45:27.000000Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado - O usuário não está autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/quiz/{quizId}/questions": {
+            "get": {
                 "tags": [
                     "Questions"
                 ],
-                "summary": "Create a question for a quiz",
-                "description": "Requires authentication and validates that quizId exists.",
-                "operationId": "97e004a42116e43dbe373db6f433bf07",
+                "summary": "Listar perguntas por quiz",
+                "description": "Retorna uma lista de perguntas associadas a um quiz específico.",
+                "operationId": "e028629a9a0f98cc7b6360e17dce1aa7",
                 "parameters": [
                     {
                         "name": "quizId",
                         "in": "path",
-                        "description": "ID of the quiz to which the question will be added",
+                        "description": "ID do quiz para o qual as perguntas devem ser listadas",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de perguntas do quiz",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 19
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Quiz 2"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Queremos eliminar um quiz de forma correta"
+                                                },
+                                                "questions": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 25
+                                                            },
+                                                            "question": {
+                                                                "type": "string",
+                                                                "example": "hola mundo"
+                                                            },
+                                                            "image": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "correct_answer": {
+                                                                "type": "integer",
+                                                                "example": 0
+                                                            },
+                                                            "answer_count": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "quiz_name": {
+                                                                "type": "string",
+                                                                "example": "Quiz 2"
+                                                            },
+                                                            "quiz_id": {
+                                                                "type": "integer",
+                                                                "example": 19
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Quiz não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No results found for Quiz with ID 18"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quiz/{quiz_id}/questions": {
+            "post": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Criar uma pergunta para um quiz",
+                "description": "Permite que apenas administradores criem uma nova pergunta associada a um quiz específico. Esta ação é restrita a usuários com o papel de administrador.",
+                "operationId": "b51994bd110a7bcd892eab53698e6209",
+                "parameters": [
+                    {
+                        "name": "quiz_id",
+                        "in": "path",
+                        "description": "ID do quiz ao qual a pergunta será associada.",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -559,17 +865,15 @@
                                 "properties": {
                                     "question": {
                                         "type": "string",
-                                        "example": "ejemplo de pregunta ?"
+                                        "example": "Isso é uma pergunta séria"
                                     },
                                     "correct_answer": {
                                         "type": "boolean",
-                                        "example": true
+                                        "example": false
                                     },
                                     "image": {
                                         "type": "string",
-                                        "format": "binary",
-                                        "example": "/storage/quizzes/kfVLLQMIeBv7dnhxL3hsnfFjw6WUwoErmu575iiv.png",
-                                        "nullable": true
+                                        "example": "localsdsdsd"
                                     }
                                 },
                                 "type": "object"
@@ -579,26 +883,26 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Question created successfully",
+                        "description": "Pergunta criada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "question": {
                                             "type": "string",
-                                            "example": "hola ?"
+                                            "example": "isto é uma atualização sim ou não"
                                         },
                                         "quiz_id": {
                                             "type": "integer",
-                                            "example": 1
+                                            "example": 18
                                         },
                                         "image": {
                                             "type": "string",
-                                            "example": "/storage/quizzes/kfVLLQMIeBv7dnhxL3hsnfFjw6WUwoErmu575iiv.png"
+                                            "example": "/storage/quizzes/FAhl3LgBmx9dGOENz0ufFL9wbijOttTTLMMOm7zS.png"
                                         },
                                         "correct_answer": {
                                             "type": "boolean",
-                                            "example": false
+                                            "example": true
                                         },
                                         "user_id": {
                                             "type": "integer",
@@ -607,16 +911,16 @@
                                         "updated_at": {
                                             "type": "string",
                                             "format": "date-time",
-                                            "example": "2024-10-25T20:19:05.000000Z"
+                                            "example": "2024-10-29T02:32:33.000000Z"
                                         },
                                         "created_at": {
                                             "type": "string",
                                             "format": "date-time",
-                                            "example": "2024-10-25T20:19:05.000000Z"
+                                            "example": "2024-10-29T02:32:33.000000Z"
                                         },
                                         "id": {
                                             "type": "integer",
-                                            "example": 1
+                                            "example": 18
                                         }
                                     },
                                     "type": "object"
@@ -625,14 +929,14 @@
                         }
                     },
                     "404": {
-                        "description": "Quiz not found",
+                        "description": "Quiz não encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "No query results for model Quiz 10"
+                                            "example": "No results found for Quiz with ID 18"
                                         }
                                     },
                                     "type": "object"
@@ -641,7 +945,7 @@
                         }
                     },
                     "422": {
-                        "description": "Validation errors",
+                        "description": "Erros de validação",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -656,27 +960,25 @@
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The question has already been taken."
+                                                        "example": "O campo pergunta é obrigatório."
+                                                    }
+                                                },
+                                                "correct_answer": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O campo resposta correta é obrigatório."
+                                                    }
+                                                },
+                                                "image": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "A imagem deve ser uma URL válida."
                                                     }
                                                 }
                                             },
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -1018,204 +1320,80 @@
                 }
             }
         },
-        "/quiz": {
-            "post": {
+        "/api/questions/{id}": {
+            "delete": {
                 "tags": [
-                    "Quiz"
+                    "Questions"
                 ],
-                "summary": "Create a new quiz",
-                "description": "Requires authentication and admin role to create a quiz.",
-                "operationId": "31ad41c09579efc749544fca69e7eebb",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "title",
-                                    "description"
-                                ],
-                                "properties": {
-                                    "title": {
-                                        "type": "string",
-                                        "example": "quiz example"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Descripcion de ejemplo"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Quiz created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "quiz": {
-                                            "properties": {
-                                                "title": {
-                                                    "type": "string",
-                                                    "example": "Cristianismo"
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "example": "Esto es una desripcion de amor"
-                                                },
-                                                "user_id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2024-10-25T20:05:28.000000Z"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2024-10-25T20:05:28.000000Z"
-                                                },
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation errors",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Validation errors"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "title": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The title field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Not authorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "You are not authorized to perform this action."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/quiz/{id}": {
-            "put": {
-                "tags": [
-                    "Quiz"
-                ],
-                "summary": "Update an existing quiz",
-                "description": "Requires authentication and admin role to update a quiz.",
-                "operationId": "8dd014b1b2e7cb7574e5f28e6289cc62",
+                "summary": "Deletar uma pergunta",
+                "description": "Permite que apenas administradores deletam uma pergunta específica. Esta ação é restrita a usuários com o papel de administrador.",
+                "operationId": "2cde4cbb83a9fc1d3660444e77750195",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the quiz to update",
+                        "description": "ID da pergunta que será deletada.",
                         "required": true,
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "title",
-                                    "description"
-                                ],
-                                "properties": {
-                                    "title": {
-                                        "type": "string",
-                                        "example": "update title"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Esto es una description de comida111"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
-                        "description": "Quiz updated successfully",
+                        "description": "Pergunta deletada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 19
+                                        },
+                                        "quiz_id": {
+                                            "type": "integer",
+                                            "example": 18
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "question": {
+                                            "type": "string",
+                                            "example": "amas a Dios ?"
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "correct_answer": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T03:42:21.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T03:42:21.000000Z"
+                                        },
                                         "quiz": {
                                             "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 18
+                                                },
                                                 "title": {
                                                     "type": "string",
-                                                    "example": "update title"
+                                                    "example": "Quiz 1"
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "example": "Esto es una description de comida111"
+                                                    "example": "Esto es un ejemplo de quiz"
                                                 },
                                                 "user_id": {
                                                     "type": "integer",
@@ -1224,16 +1402,12 @@
                                                 "created_at": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "example": "2024-10-25T20:05:28.000000Z"
+                                                    "example": "2024-10-29T01:58:21.000000Z"
                                                 },
                                                 "updated_at": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "example": "2024-10-25T20:05:28.000000Z"
-                                                },
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
+                                                    "example": "2024-10-29T01:58:21.000000Z"
                                                 }
                                             },
                                             "type": "object"
@@ -1245,14 +1419,187 @@
                         }
                     },
                     "404": {
-                        "description": "Quiz not found",
+                        "description": "Pergunta não encontrada",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "error": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "No query results for model Quiz 20"
+                                            "example": "No results found for Question with ID 19"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/questions": {
+            "get": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Obter todas as perguntas",
+                "description": "Retorna uma lista de todas as perguntas disponíveis.",
+                "operationId": "860331f8e4b6d740293483a82e52fc5a",
+                "responses": {
+                    "200": {
+                        "description": "Lista de perguntas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 25
+                                                    },
+                                                    "question": {
+                                                        "type": "string",
+                                                        "example": "hola mundo"
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    },
+                                                    "correct_answer": {
+                                                        "type": "integer",
+                                                        "example": 0
+                                                    },
+                                                    "answer_count": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "quiz_name": {
+                                                        "type": "string",
+                                                        "example": "Quiz 2"
+                                                    },
+                                                    "quiz_id": {
+                                                        "type": "integer",
+                                                        "example": 19
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quiz": {
+            "get": {
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Obter todos os quizzes",
+                "description": "Retorna uma lista de todos os quizzes disponíveis.",
+                "operationId": "9537710f5308de2caa84652ba9bc92af",
+                "responses": {
+                    "200": {
+                        "description": "Lista de quizzes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 19
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Quiz 2"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Queremos eliminar um quiz de forma correta"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Criar um novo quiz",
+                "description": "Cria um novo quiz com base nos dados fornecidos. Apenas usuários com o papel de administrador podem criar um novo registro.",
+                "operationId": "8e9f7aa63a127de0bd41e7f4bbcac67b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Quiz 5"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Esto es una descripcion 5"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Quiz criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 20
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Quiz 5"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Esto es uma descrição 5"
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T02:19:50.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T02:19:50.000000Z"
                                         }
                                     },
                                     "type": "object"
@@ -1261,7 +1608,7 @@
                         }
                     },
                     "422": {
-                        "description": "Validation errors",
+                        "description": "Erros de validação",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1276,7 +1623,14 @@
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The title field is required."
+                                                        "example": "The title has already been taken."
+                                                    }
+                                                },
+                                                "description": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The description has already been taken."
                                                     }
                                                 }
                                             },
@@ -1287,16 +1641,52 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
+                    }
+                }
+            }
+        },
+        "/api/quiz/{id}": {
+            "get": {
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Obter um quiz específico",
+                "description": "Retorna um quiz com base no ID fornecido.",
+                "operationId": "ff37b75e9c424feb05ba11fc227a33ab",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do quiz",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Quiz encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 19
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Quiz 2"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Queremos eliminar um quiz de forma correta"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1304,15 +1694,145 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Not authorized",
+                    "404": {
+                        "description": "Quiz não encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You are not authorized to perform this action."
+                                            "example": "No results found for Quiz with ID 190"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Atualizar um quiz existente",
+                "description": "Atualiza um quiz existente com base nos dados fornecidos. Apenas usuários com o papel de administrador podem realizar esta ação.",
+                "operationId": "fdb65f04f68830a1da262427cb6e098c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 20
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "ada update"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Esto es una actualizacion1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Quiz atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 20
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "ada update"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Esto es uma atualizacao1"
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T02:19:50.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-29T09:19:34.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Quiz não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "No results found for Quiz with ID 2122"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erros de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation errors"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "title": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The title has already been taken."
+                                                    }
+                                                },
+                                                "description": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The description has already been taken."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1326,30 +1846,52 @@
                 "tags": [
                     "Quiz"
                 ],
-                "summary": "Delete a quiz",
-                "description": "Requires authentication and admin role to delete a quiz.",
-                "operationId": "aecd36bfc28ed9e03a4dad9b11f35a83",
+                "summary": "Deletar um quiz existente",
+                "description": "Remove um quiz existente. Apenas usuários com o papel de administrador podem realizar esta ação.",
+                "operationId": "8383082d8e12fc241df816aea89a0112",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the quiz to delete",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 20
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Quiz deleted successfully",
+                        "description": "Quiz removido com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 20
+                                        },
+                                        "title": {
                                             "type": "string",
-                                            "example": "Record deleted successfully"
+                                            "example": "ada 2"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "tes amo hija"
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-28T21:02:46.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-10-28T21:02:46.000000Z"
                                         }
                                     },
                                     "type": "object"
@@ -1358,46 +1900,14 @@
                         }
                     },
                     "404": {
-                        "description": "Quiz not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string",
-                                            "example": "No query results for model Quiz 20"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
+                        "description": "Quiz não encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Not authorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "You are not authorized to perform this action."
+                                            "example": "No results found for Quiz with ID 20"
                                         }
                                     },
                                     "type": "object"
@@ -1415,8 +1925,8 @@
             "description": "Auth"
         },
         {
-            "name": "Respuestas",
-            "description": "Respuestas"
+            "name": "Jogo",
+            "description": "Jogo"
         },
         {
             "name": "Questions",

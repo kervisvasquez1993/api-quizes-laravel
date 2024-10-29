@@ -27,99 +27,120 @@ class QuestionController extends Controller
         $this->questionServices = $questionServices;
     }
 
-    public function index()
-    {
-        // TODO: AJUSTAR ESTO PARA ENVIARLO A LA LOGIA QUE CORRESPONDE 
-        $data = Question::with('quiz')->get();
-        return QuestionResource::collection($data);
-    }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/quiz/{quizId}/questions",
+     *     tags={"Questions"},
+     *     summary="Listar perguntas por quiz",
+     *     description="Retorna uma lista de perguntas associadas a um quiz específico.",
+     *     @OA\Parameter(
+     *         name="quizId",
+     *         in="path",
+     *         required=true,
+     *         description="ID do quiz para o qual as perguntas devem ser listadas",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de perguntas do quiz",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=19),
+     *                 @OA\Property(property="title", type="string", example="Quiz 2"),
+     *                 @OA\Property(property="description", type="string", example="Queremos eliminar um quiz de forma correta"),
+     *                 @OA\Property(property="questions", type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=25),
+     *                         @OA\Property(property="question", type="string", example="hola mundo"),
+     *                         @OA\Property(property="image", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="correct_answer", type="integer", example=0),
+     *                         @OA\Property(property="answer_count", type="integer", example=1),
+     *                         @OA\Property(property="quiz_name", type="string", example="Quiz 2"),
+     *                         @OA\Property(property="quiz_id", type="integer", example=19)
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Quiz não encontrado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="No results found for Quiz with ID 18")
+     *         )
+     *     )
+     * )
+     */
     public function questionForQuiz($quizId)
     {
 
         $data = $this->quizServices->questionForQuiz($quizId);
         if (isset($data['success']) && !$data['success']) {
-            return response()->json(["messages" => $data["message"]], Response::HTTP_NOT_FOUND);
+            return response()->json(["message" => $data["message"]], Response::HTTP_NOT_FOUND);
         }
         return new QuizResource($data);
     }
     /**
      * @OA\Post(
-     *     path="/quiz/{quizId}/questions",
+     *     path="/api/quiz/{quiz_id}/questions",
      *     tags={"Questions"},
-     *     summary="Create a question for a quiz",
-     *     description="Requires authentication and validates that quizId exists.",
+     *     summary="Criar uma pergunta para um quiz",
+     *     description="Permite que apenas administradores criem uma nova pergunta associada a um quiz específico. Esta ação é restrita a usuários com o papel de administrador.",
      *     @OA\Parameter(
-     *         name="quizId",
+     *         name="quiz_id",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="ID of the quiz to which the question will be added"
+     *         description="ID do quiz ao qual a pergunta será associada.",
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="question", type="string", example="ejemplo de pregunta ?"),
-     *             @OA\Property(property="correct_answer", type="boolean", example=true),
-     *             @OA\Property(property="image", type="string", format="binary", nullable=true, example="/storage/quizzes/kfVLLQMIeBv7dnhxL3hsnfFjw6WUwoErmu575iiv.png")
+     *             @OA\Property(property="question", type="string", example="Isso é uma pergunta séria"),
+     *             @OA\Property(property="correct_answer", type="boolean", example=false),
+     *             @OA\Property(property="image", type="string", example="localsdsdsd")
      *         )
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Question created successfully",
+     *         description="Pergunta criada com sucesso",
      *         @OA\JsonContent(
-     *             @OA\Property(property="question", type="string", example="hola ?"),
-     *             @OA\Property(property="quiz_id", type="integer", example=1),
-     *             @OA\Property(property="image", type="string", example="/storage/quizzes/kfVLLQMIeBv7dnhxL3hsnfFjw6WUwoErmu575iiv.png"),
-     *             @OA\Property(property="correct_answer", type="boolean", example=false),
+     *             @OA\Property(property="question", type="string", example="isto é uma atualização sim ou não"),
+     *             @OA\Property(property="quiz_id", type="integer", example=18),
+     *             @OA\Property(property="image", type="string", example="/storage/quizzes/FAhl3LgBmx9dGOENz0ufFL9wbijOttTTLMMOm7zS.png"),
+     *             @OA\Property(property="correct_answer", type="boolean", example=true),
      *             @OA\Property(property="user_id", type="integer", example=1),
-     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-25T20:19:05.000000Z"),
-     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-25T20:19:05.000000Z"),
-     *             @OA\Property(property="id", type="integer", example=1)
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-29T02:32:33.000000Z"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-29T02:32:33.000000Z"),
+     *             @OA\Property(property="id", type="integer", example=18)
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Quiz not found",
+     *         description="Quiz não encontrado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="No query results for model Quiz 10")
+     *             @OA\Property(property="message", type="string", example="No results found for Quiz with ID 18")
      *         )
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Validation errors",
+     *         description="Erros de validação",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Validation errors"),
-     *             @OA\Property(property="data", type="object", 
-     *                 @OA\Property(property="question", type="array", @OA\Items(type="string", example="The question has already been taken."))
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="question", type="array", @OA\Items(type="string", example="O campo pergunta é obrigatório.")),
+     *                 @OA\Property(property="correct_answer", type="array", @OA\Items(type="string", example="O campo resposta correta é obrigatório.")),
+     *                 @OA\Property(property="image", type="array", @OA\Items(type="string", example="A imagem deve ser uma URL válida."))
      *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )
      */
-    // public function store(StoreQuestionRequest $request, $quizId)
-    // {
-
-    //         $quiz = $this->quizServices->getQuizById($quizId);
-    //         if (isset($quiz['success']) && !$quiz['success']) {
-    //             return response()->json(["messages" => $quiz["message"]], Response::HTTP_NOT_FOUND);
-    //         }
-    //         $imgFile = $this->questionServices->saveFile($request->image);
-    //         $result = $this->questionServices->createQuestion(QuestionDTO::fromRequest($request, $quiz->id, $imgFile), $quizId);
-    //         if (!$result['success']) {
-    //             return response()->json([
-    //                 'error' => $result['message']
-    //             ], 422);
-    //         }
-    //         return response()->json($result['data'], status: 201);
-    // }
     public function store(StoreQuestionRequest $request, $quizId)
     {
         $data = $this->questionServices->createQuestionWithQuiz($request, $quizId);
@@ -286,7 +307,7 @@ class QuestionController extends Controller
             return response()->json($result['data'], status: 200);
         } catch (Exception $exception) {
             return response()->json([
-                'messages' => $exception->getMessage()
+                'message' => $exception->getMessage()
             ], 404);
         }
     }
@@ -300,6 +321,51 @@ class QuestionController extends Controller
         }
         return response()->json($data["data"], 200);
     }
+    /**
+     * @OA\Delete(
+     *     path="/api/questions/{id}",
+     *     tags={"Questions"},
+     *     summary="Deletar uma pergunta",
+     *     description="Permite que apenas administradores deletam uma pergunta específica. Esta ação é restrita a usuários com o papel de administrador.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID da pergunta que será deletada.",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Pergunta deletada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=19),
+     *             @OA\Property(property="quiz_id", type="integer", example=18),
+     *             @OA\Property(property="user_id", type="integer", example=1),
+     *             @OA\Property(property="question", type="string", example="amas a Dios ?"),
+     *             @OA\Property(property="image", type="string", nullable=true, example=null),
+     *             @OA\Property(property="correct_answer", type="integer", example=1),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-29T03:42:21.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-29T03:42:21.000000Z"),
+     *             @OA\Property(property="quiz", type="object",
+     *                 @OA\Property(property="id", type="integer", example=18),
+     *                 @OA\Property(property="title", type="string", example="Quiz 1"),
+     *                 @OA\Property(property="description", type="string", example="Esto es un ejemplo de quiz"),
+     *                 @OA\Property(property="user_id", type="integer", example=1),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-10-29T01:58:21.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-29T01:58:21.000000Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pergunta não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="No results found for Question with ID 19")
+     *         )
+     *     )
+     * )
+     */
+
 
     public function destroy($id)
     {
@@ -310,5 +376,38 @@ class QuestionController extends Controller
             ], 404);
         }
         return response()->json($data["data"], 201);
+    }
+    /**
+     * @OA\Get(
+     *     path="/api/questions",
+     *     tags={"Questions"}, 
+     *     summary="Obter todas as perguntas",
+     *     description="Retorna uma lista de todas as perguntas disponíveis.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de perguntas",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=25),
+     *                     @OA\Property(property="question", type="string", example="hola mundo"),
+     *                     @OA\Property(property="image", type="string", nullable=true, example=null),
+     *                     @OA\Property(property="correct_answer", type="integer", example=0),
+     *                     @OA\Property(property="answer_count", type="integer", example=1),
+     *                     @OA\Property(property="quiz_name", type="string", example="Quiz 2"),
+     *                     @OA\Property(property="quiz_id", type="integer", example=19)
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function index()
+    {
+        // TODO: AJUSTAR ESTO PARA ENVIARLO A LA LOGIA QUE CORRESPONDE 
+        $data = Question::with('quiz')->get();
+        return QuestionResource::collection($data);
     }
 }
