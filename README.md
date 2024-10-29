@@ -18,7 +18,7 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
    
    - Copie o arquivo de ambiente:
     
-    ```
+   
      cp .env.example .env
 
      docker-compose up -d --build 
@@ -26,7 +26,7 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
      docker-compose exec app php artisan migrate:fresh --seed
    
      docker-compose exec app php artisan passport:client --personal
-     ```
+  
 
 
 
