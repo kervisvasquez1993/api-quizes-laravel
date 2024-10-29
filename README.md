@@ -23,13 +23,13 @@ Este proyecto es una aplicación Laravel configurada para ejecutarse en un entor
  
     ```
     ```
-      docker-compose up -d --build 
+     docker-compose up -d --build 
     ```
      ```
-          docker-compose exec app php artisan migrate:fresh --seed
+     docker-compose exec app php artisan migrate:fresh --seed
      ```
      ```
-          docker-compose exec app php artisan passport:client --personal
+     docker-compose exec app php artisan passport:client --personal
      ```
 
 
