@@ -1,57 +1,84 @@
-**Project Laravel with Docker**
+# Proyecto Laravel con Docker
 
-This project uses Laravel 11 and Docker to create a web application. Below are the steps to set up and run the project.
-**Requirements:** 
--- Docker
--- Docker Compose
+Este proyecto es una aplicación Laravel configurada para ejecutarse en un entorno Docker. Sigue los pasos a continuación para configurarlo y levantarlo.
 
-**
+## Requisitos
 
-> Project Setup
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-**
-**Build the Docker images: docker-compose build**
+## Instrucciones de Configuración
 
-  
+1. **Clona el repositorio y navega a la carpeta del proyecto:**
 
-**Start the containers in the background: docker-compose up -d**
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd <NOMBRE_DEL_PROYECTO>
+   
+   Copia el archivo de entorno:
 
-  
+   cp .env.example .env
 
-**Install Composer dependencies: docker-compose exec app composer install**
+    Levanta los contenedores de Docker:
 
-  
+    docker-compose up -d
 
-**Copy the example configuration file: cp .env.example .env**
+    Instala las dependencias de Composer:
 
-  
+    Ejecuta Composer dentro del contenedor de la aplicación:
 
-**Run migrations and seed the database: docker-compose exec app php artisan migrate --seed**
+    docker-compose exec app composer install
 
-  
+    Ejecuta las migraciones y los seeders:
 
-**Generate keys for Passport:**
+    Esto crea la base de datos y llena las tablas con datos iniciales:
 
-  
+    docker-compose exec app php artisan migrate:fresh --seed
 
-**docker-compose exec app php artisan passport****
+    Configura Passport para autenticación de API:
 
-  
+    Crea un cliente personal de Passport para el manejo de tokens:
 
-**docker-compose exec app php artisan passport --personal**
+    docker-compose exec app php artisan passport:client --personal
 
-  
+    Crea el enlace simbólico para almacenamiento:
 
-**Create symbolic links for storage: docker-compose exec app php artisan storage**
+    Esto hace que el almacenamiento público esté disponible en /storage:
+    
+    docker-compose exec app php artisan storage:link
 
-  
+    Ajusta los permisos de las carpetas:
 
-> Note: If you are not using Docker to run the project, execute the
-> following command to generate the application key:
+    docker-compose exec app chown -R www-data:www-data /var/www/html -R
 
-  
+    Inicia el worker para procesar los jobs:
 
-**php artisan key**
+    Laravel usa colas para gestionar tareas en segundo plano, y puedes iniciar 
+    un worker para que procese los jobs en la base de datos:
+
+    docker-compose exec app php artisan queue:work --daemon
+
+
+    Ahora, puedes acceder a la aplicación en http://localhost:8000
+
+    Comandos Útiles
+    Apagar los contenedores:
+
+    docker-compose down
+
+    Ejecutar comandos de Artisan adicionales:
+
+    Puedes ejecutar cualquier comando de Artisan con:
+
+    docker-compose exec app php artisan <comando>
+    
+    ```
+
+
+
+
+
+
 
   
 
